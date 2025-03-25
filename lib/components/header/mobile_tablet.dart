@@ -2,6 +2,7 @@ import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class TabletNav extends StatelessWidget {
   const TabletNav({
+    super.key,
     required this.title,
     required this.onTap,
   });
@@ -11,21 +12,19 @@ class TabletNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return MaterialButton(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(size.height * 0.015),
       ),
       onPressed: () => onTap(),
       color: AppColors.blue,
-      hoverColor: AppColors.black.withOpacity(0.2),
+      hoverColor: AppColors.black.withValues(alpha: 0.2),
       child: Container(
         width: size.width * 0.55,
-        padding: EdgeInsets.symmetric(
-          vertical: size.height * 0.013,
-        ),
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.013),
         child: Text(
-          "$title",
+          title,
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             color: AppColors.white,

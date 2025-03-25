@@ -1,6 +1,8 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
-class AppColors {
+abstract class AppColors {
+  const AppColors._();
+
   static const Color white = Colors.white;
   static const Color black = Colors.black;
   static const Color blue = Color(0xff00AEEF);

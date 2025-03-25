@@ -1,9 +1,11 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class IntroToken extends StatelessWidget {
+  const IntroToken({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Responsive(
       mobile: _mobile(size),
       tablet: _tablet(size),
@@ -57,7 +59,7 @@ class IntroToken extends StatelessWidget {
                   ),
                   SizedBox(height: size.height * 0.015),
                   Text(
-                    "${AppText.tokenIntroTitle}",
+                    AppText.tokenIntroTitle,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.russoOne(
                       color: AppColors.white,
@@ -65,7 +67,7 @@ class IntroToken extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: size.height * 0.03),
-                  IntroText(),
+                  const IntroText(),
                 ],
               ),
             ),
@@ -114,7 +116,7 @@ class IntroToken extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.025),
           Text(
-            "${AppText.tokenIntroTitle}",
+            AppText.tokenIntroTitle,
             textAlign: TextAlign.center,
             style: GoogleFonts.russoOne(
               color: AppColors.white,
@@ -122,7 +124,7 @@ class IntroToken extends StatelessWidget {
             ),
           ),
           SizedBox(height: size.height * 0.045),
-          IntroText(),
+          const IntroText(),
         ],
       ),
     );
@@ -158,7 +160,7 @@ class IntroToken extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.025),
           Text(
-            "${AppText.tokenIntroTitle}",
+            AppText.tokenIntroTitle,
             textAlign: TextAlign.center,
             style: GoogleFonts.russoOne(
               color: AppColors.white,
@@ -166,7 +168,7 @@ class IntroToken extends StatelessWidget {
             ),
           ),
           SizedBox(height: size.height * 0.023),
-          IntroText(),
+          const IntroText(),
         ],
       ),
     );

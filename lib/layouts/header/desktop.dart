@@ -1,12 +1,12 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 Widget desktop(BuildContext context) {
-  Size size = MediaQuery.of(context).size;
-  var onClick = context.read<NavProvider>();
+  final Size size = MediaQuery.sizeOf(context);
+  final NavProvider onClick = context.read<NavProvider>();
   return Container(
     width: size.width,
     height: size.height,
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       image: DecorationImage(
         fit: BoxFit.cover,
         image: AssetImage(AppAsset.space1),
@@ -27,14 +27,14 @@ Widget desktop(BuildContext context) {
             ),
             SizedBox(width: size.width * 0.01),
             Text(
-              "${AppSettings.shortName}".toUpperCase(),
+              AppSettings.shortName.toUpperCase(),
               textAlign: TextAlign.center,
               style: GoogleFonts.russoOne(
                 color: AppColors.blue,
                 fontSize: size.height * 0.023,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -57,7 +57,7 @@ Widget desktop(BuildContext context) {
                 SizedBox(width: size.width * 0.01),
                 MaterialButton(
                   color: AppColors.white,
-                  hoverColor: AppColors.black.withOpacity(0.12),
+                  hoverColor: AppColors.black.withValues(alpha: 0.12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(size.height * 0.01),
                   ),
@@ -80,7 +80,7 @@ Widget desktop(BuildContext context) {
                         textAlign: TextAlign.center,
                         style: GoogleFonts.roboto(
                           fontSize: size.height * 0.015,
-                          color: AppColors.black.withOpacity(0.75),
+                          color: AppColors.black.withValues(alpha: 0.75),
                         ),
                       ),
                     ],
@@ -99,13 +99,13 @@ Widget desktop(BuildContext context) {
                 "Welcome to",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
-                  color: Color(0xffB7D8FF),
+                  color: const Color(0xffB7D8FF),
                   fontSize: size.height * 0.03,
                 ),
               ),
               SizedBox(height: size.height * 0.002),
               Text(
-                "${AppSettings.shortName}".toUpperCase(),
+                AppSettings.shortName.toUpperCase(),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.russoOne(
                   color: AppColors.white,
@@ -118,11 +118,11 @@ Widget desktop(BuildContext context) {
                   horizontal: size.width * 0.15,
                 ),
                 child: Text(
-                  "${AppText.home}",
+                  AppText.home,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
                     fontSize: size.height * 0.022,
-                    color: AppColors.white.withOpacity(0.8),
+                    color: AppColors.white.withValues(alpha: 0.8),
                   ),
                 ),
               ),

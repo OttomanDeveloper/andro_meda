@@ -2,13 +2,13 @@ import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class InfoTablet extends StatelessWidget {
   final bool isMobile;
-  const InfoTablet({this.isMobile = false});
+  const InfoTablet({super.key, this.isMobile = false});
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    bool fastSecureMobile = isMobile ? true : false;
-    bool fastSecureTablet = isMobile ? false : true;
+    final Size size = MediaQuery.sizeOf(context);
+    final bool fastSecureMobile = isMobile ? true : false;
+    final bool fastSecureTablet = isMobile ? false : true;
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -39,16 +39,17 @@ class InfoTablet extends StatelessWidget {
                   fontSize:
                       isMobile ? size.height * 0.026 : size.height * 0.035,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.white.withOpacity(0.9),
+                  color: AppColors.white.withValues(alpha: 0.9),
                 ),
               ),
               SizedBox(
-                  height: isMobile ? size.height * 0.016 : size.height * 0.02),
+                height: isMobile ? size.height * 0.016 : size.height * 0.02,
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.08,
                 ),
-                child: InfoText(),
+                child: const InfoText(),
               ),
             ],
           ),

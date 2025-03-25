@@ -1,12 +1,12 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 Widget tablet(BuildContext context) {
-  Size size = MediaQuery.of(context).size;
-  var onClick = context.read<NavProvider>();
+  final Size size = MediaQuery.sizeOf(context);
+  final NavProvider onClick = context.read<NavProvider>();
   return Container(
     width: size.width,
     height: size.height,
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       color: AppColors.parent,
       image: DecorationImage(
         fit: BoxFit.cover,
@@ -20,7 +20,7 @@ Widget tablet(BuildContext context) {
       drawerScrimColor: AppColors.parent,
       drawer: sideBar(context, onClick),
       appBar: AppBar(
-        leading: SizedBox.shrink(),
+        leading: const SizedBox.shrink(),
         backgroundColor: AppColors.parent,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -33,7 +33,7 @@ Widget tablet(BuildContext context) {
             ),
             SizedBox(width: size.width * 0.015),
             Text(
-              "${AppSettings.shortName}".toUpperCase(),
+              AppSettings.shortName.toUpperCase(),
               textAlign: TextAlign.center,
               style: GoogleFonts.russoOne(
                 color: AppColors.blue,
@@ -57,7 +57,7 @@ Widget tablet(BuildContext context) {
                 Icon(
                   Icons.menu_outlined,
                   size: size.height * 0.025,
-                  color: AppColors.white.withOpacity(0.75),
+                  color: AppColors.white.withValues(alpha: 0.75),
                 ),
                 SizedBox(width: size.width * 0.006),
                 Text(
@@ -65,7 +65,7 @@ Widget tablet(BuildContext context) {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
                     fontSize: size.height * 0.019,
-                    color: AppColors.white.withOpacity(0.72),
+                    color: AppColors.white.withValues(alpha: 0.72),
                   ),
                 ),
               ],
@@ -82,12 +82,12 @@ Widget tablet(BuildContext context) {
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: size.height * 0.03,
-              color: AppColors.white.withOpacity(0.8),
+              color: AppColors.white.withValues(alpha: 0.8),
             ),
           ),
           SizedBox(height: size.height * 0.007),
           Text(
-            "${AppSettings.shortName}".toUpperCase(),
+            AppSettings.shortName.toUpperCase(),
             textAlign: TextAlign.center,
             style: GoogleFonts.russoOne(
               color: AppColors.white,
@@ -100,10 +100,10 @@ Widget tablet(BuildContext context) {
               horizontal: size.width * 0.07,
             ),
             child: Text(
-              "${AppText.home}",
+              AppText.home,
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
-                color: AppColors.white.withOpacity(0.8),
+                color: AppColors.white.withValues(alpha: 0.8),
                 fontSize: size.height * 0.023,
               ),
             ),
@@ -122,7 +122,7 @@ Widget tablet(BuildContext context) {
           SizedBox(height: size.height * 0.035),
           Container(
             decoration: BoxDecoration(
-              color: AppColors.white.withOpacity(0.3),
+              color: AppColors.white.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(size.height * 0.015),
             ),
             padding: EdgeInsets.symmetric(

@@ -2,11 +2,11 @@ import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class TabletTeam extends StatelessWidget {
   final Widget teamLiner;
-  const TabletTeam(this.teamLiner);
+  const TabletTeam(this.teamLiner, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Column(
       children: [
         SizedBox(height: size.height * 0.03),

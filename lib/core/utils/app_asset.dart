@@ -1,4 +1,6 @@
-class AppAsset {
+abstract class AppAsset {
+  const AppAsset._();
+
   static const String space1 = "assets/images/space.jpg";
   static const String logo = "assets/icons/logo_source.png";
   static const String instaSVG = "assets/icons/svg/insta.svg";

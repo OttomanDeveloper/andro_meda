@@ -1,12 +1,12 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 Widget mobile(BuildContext context) {
-  Size size = MediaQuery.of(context).size;
-  var onClick = context.read<NavProvider>();
+  final Size size = MediaQuery.sizeOf(context);
+  final NavProvider onClick = context.read<NavProvider>();
   return Container(
     width: size.width,
     height: size.height,
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       color: AppColors.parent,
       image: DecorationImage(
         fit: BoxFit.cover,
@@ -28,9 +28,9 @@ Widget mobile(BuildContext context) {
               onClick.globalKey.currentState!.openDrawer();
             }
           },
-          icon: Icon(Icons.menu_outlined),
+          icon: const Icon(Icons.menu_outlined),
           iconSize: size.height * 0.025,
-          color: AppColors.white.withOpacity(0.75),
+          color: AppColors.white.withValues(alpha: 0.75),
         ),
         backgroundColor: AppColors.parent,
         centerTitle: true,
@@ -45,7 +45,7 @@ Widget mobile(BuildContext context) {
             ),
             SizedBox(width: size.width * 0.028),
             Text(
-              "${AppSettings.shortName}".toUpperCase(),
+              AppSettings.shortName.toUpperCase(),
               textAlign: TextAlign.center,
               style: GoogleFonts.russoOne(
                 color: AppColors.blue,
@@ -63,12 +63,12 @@ Widget mobile(BuildContext context) {
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: size.height * 0.025,
-              color: AppColors.white.withOpacity(0.8),
+              color: AppColors.white.withValues(alpha: 0.8),
             ),
           ),
           SizedBox(height: size.height * 0.006),
           Text(
-            "${AppSettings.shortName}".toUpperCase(),
+            AppSettings.shortName.toUpperCase(),
             textAlign: TextAlign.center,
             style: GoogleFonts.russoOne(
               color: AppColors.white,
@@ -81,11 +81,11 @@ Widget mobile(BuildContext context) {
               horizontal: size.width * 0.07,
             ),
             child: Text(
-              "${AppText.home}",
+              AppText.home,
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 fontSize: size.height * 0.025,
-                color: AppColors.white.withOpacity(0.8),
+                color: AppColors.white.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -103,7 +103,7 @@ Widget mobile(BuildContext context) {
           SizedBox(height: size.height * 0.03),
           Container(
             decoration: BoxDecoration(
-              color: AppColors.white.withOpacity(0.25),
+              color: AppColors.white.withValues(alpha: 0.25),
               borderRadius: BorderRadius.circular(size.height * 0.015),
             ),
             padding: EdgeInsets.symmetric(

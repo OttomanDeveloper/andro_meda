@@ -4,7 +4,7 @@ Drawer sideBar(
   BuildContext context,
   NavProvider onClick,
 ) {
-  Size size = MediaQuery.of(context).size;
+  final Size size = MediaQuery.sizeOf(context);
   return Drawer(
       child: Column(
     children: [

@@ -4,11 +4,11 @@ import 'package:safeandromeda/core/hooks/hooks.dart';
 class PopDialog {
   final BuildContext context;
   PopDialog({required this.context}) {
-    showCupertinoDialog(
+    showCupertinoDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        Size size = MediaQuery.of(context).size;
+        final Size size = MediaQuery.sizeOf(context);
         return Responsive(
           mobile: dilog(size, padding: size.width * 0.07),
           tablet: dilog(size, padding: size.width * 0.13),
@@ -44,7 +44,7 @@ class PopDialog {
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w700,
               fontSize: size.height * 0.028,
-              color: AppColors.black.withOpacity(0.75),
+              color: AppColors.black.withValues(alpha: 0.75),
             ),
           ),
           SizedBox(height: size.height * 0.01),
@@ -57,7 +57,7 @@ class PopDialog {
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 fontSize: size.height * 0.018,
-                color: AppColors.black.withOpacity(0.7),
+                color: AppColors.black.withValues(alpha: 0.7),
               ),
             ),
           ),
@@ -67,7 +67,7 @@ class PopDialog {
             color: AppColors.blue,
             child: InkWell(
               onTap: () => openLink(AppLinks.telegram),
-              hoverColor: AppColors.black.withOpacity(0.1),
+              hoverColor: AppColors.black.withValues(alpha: 0.1),
               onHover: (value) {},
               child: Container(
                 padding: EdgeInsets.symmetric(
@@ -77,7 +77,7 @@ class PopDialog {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     SvgPicture.asset(
                       AppAsset.telegram,
                       height: size.height * 0.03,
@@ -91,7 +91,7 @@ class PopDialog {
                         fontSize: size.height * 0.02,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ),

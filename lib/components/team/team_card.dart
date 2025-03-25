@@ -2,6 +2,7 @@ import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class TeamCard extends StatefulWidget {
   const TeamCard({
+    super.key,
     required this.name,
     required this.specialist,
     required this.asset,
@@ -16,7 +17,7 @@ class TeamCard extends StatefulWidget {
   final bool isTablet;
 
   @override
-  _TeamCardState createState() => _TeamCardState();
+  State<TeamCard> createState() => _TeamCardState();
 }
 
 class _TeamCardState extends State<TeamCard> {
@@ -24,22 +25,26 @@ class _TeamCardState extends State<TeamCard> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double cardWidth = widget.isMobile
-        ? size.width * 0.6
-        : widget.isTablet
-            ? size.width * 0.425
-            : size.width * 0.165;
-    double headerGreenLine = widget.isMobile
-        ? size.height * 0.007
-        : widget.isTablet
-            ? size.height * 0.012
-            : size.height * 0.015;
-    double avatarRadius = widget.isMobile
-        ? size.height * 0.0435
-        : widget.isTablet
-            ? size.height * 0.0672
-            : size.height * 0.063;
+    final Size size = MediaQuery.sizeOf(context);
+    late final double cardWidth;
+    late final double avatarRadius;
+    late final double headerGreenLine;
+    if (widget.isMobile) {
+      cardWidth = size.width * 0.6;
+      avatarRadius = size.height * 0.0435;
+      headerGreenLine = size.height * 0.007;
+    } else {
+      if (widget.isTablet) {
+        cardWidth = size.width * 0.425;
+        avatarRadius = size.height * 0.0672;
+        headerGreenLine = size.height * 0.012;
+      } else {
+        cardWidth = size.width * 0.165;
+        avatarRadius = size.height * 0.063;
+        headerGreenLine = size.height * 0.015;
+      }
+    }
+
     return Material(
       elevation: 10.0,
       color: AppColors.parent,
@@ -60,7 +65,7 @@ class _TeamCardState extends State<TeamCard> {
             border: Border.all(
               color: _isHover ? AppColors.teamGreen : AppColors.parent,
             ),
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 AppColors.teamCard1,
                 AppColors.teamCard2,
@@ -90,7 +95,7 @@ class _TeamCardState extends State<TeamCard> {
               ),
               SizedBox(height: size.height * 0.015),
               Text(
-                '${widget.name}',
+                widget.name,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   color: AppColors.teamGreen,
@@ -106,7 +111,7 @@ class _TeamCardState extends State<TeamCard> {
                   Expanded(child: teamLine(size)),
                   SizedBox(width: size.width * 0.0045),
                   Text(
-                    '${widget.specialist}',
+                    widget.specialist,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.roboto(
                       fontSize: size.height * 0.0163,

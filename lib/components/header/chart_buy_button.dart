@@ -16,7 +16,7 @@ Widget buySellButtons(
     children: [
       MaterialButton(
         color: AppColors.white,
-        hoverColor: AppColors.black.withOpacity(0.12),
+        hoverColor: AppColors.black.withValues(alpha: 0.12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(rounded),
         ),
@@ -32,7 +32,7 @@ Widget buySellButtons(
             Icon(
               Icons.bar_chart,
               size: iconSize,
-              color: AppColors.black.withOpacity(0.75),
+              color: AppColors.black.withValues(alpha: 0.75),
             ),
             SizedBox(width: iconTextSpace),
             Text(
@@ -40,7 +40,7 @@ Widget buySellButtons(
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 fontSize: textSize,
-                color: AppColors.black.withOpacity(0.75),
+                color: AppColors.black.withValues(alpha: 0.75),
               ),
             ),
           ],
@@ -49,7 +49,7 @@ Widget buySellButtons(
       SizedBox(width: buttonSpace),
       MaterialButton(
         color: Colors.blue,
-        hoverColor: AppColors.black.withOpacity(0.12),
+        hoverColor: AppColors.black.withValues(alpha: 0.12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(rounded),
         ),

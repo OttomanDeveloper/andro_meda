@@ -1,9 +1,11 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class TeamMember extends StatelessWidget {
+  const TeamMember({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Responsive(
       mobile: MobileTeam(teamLiner(size)),
       tablet: TabletTeam(teamLiner(size)),

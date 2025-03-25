@@ -1,13 +1,15 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class InfoText extends StatelessWidget {
+  const InfoText({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return ListView.builder(
       padding: EdgeInsets.zero,
       itemCount: AppText.tokenIntroDes.length,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         return Column(
@@ -24,13 +26,15 @@ class InfoText extends StatelessWidget {
 }
 
 class IntroText extends StatelessWidget {
+  const IntroText({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return ListView.builder(
       padding: EdgeInsets.zero,
       itemCount: AppText.infoTexts.length,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         return Column(

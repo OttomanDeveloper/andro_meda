@@ -1,9 +1,11 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class RoadMap extends StatelessWidget {
+  const RoadMap({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Responsive(
       mobile: _mobile(size),
       tablet: _tablet(size),
@@ -70,7 +72,7 @@ class RoadMap extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       child: SizedBox.shrink(),
                     ),
                   ],
@@ -82,7 +84,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q1 2021",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.85),
+                    titleColor: AppColors.white.withValues(alpha: 0.85),
                   ),
                 ),
                 Positioned(
@@ -92,7 +94,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q2 2021",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.75),
+                    titleColor: AppColors.white.withValues(alpha: 0.75),
                   ),
                 ),
                 Positioned(
@@ -102,7 +104,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q3 2022",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.67),
+                    titleColor: AppColors.white.withValues(alpha: 0.67),
                   ),
                 ),
                 Positioned(
@@ -112,7 +114,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q4 2022",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.6),
+                    titleColor: AppColors.white.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -161,7 +163,7 @@ class RoadMap extends StatelessWidget {
             ),
           ),
           SizedBox(height: size.height * 0.05),
-          Container(
+          SizedBox(
             height: size.height * 0.7,
             child: Stack(
               alignment: Alignment.center,
@@ -172,15 +174,15 @@ class RoadMap extends StatelessWidget {
                 Container(
                   height: size.height,
                   width: size.width,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        const Color(0x00222020),
-                        const Color(0x83222020),
-                        const Color(0x83222020),
-                        const Color(0x00222020),
+                        Color(0x00222020),
+                        Color(0x83222020),
+                        Color(0x83222020),
+                        Color(0x00222020),
                       ],
                     ),
                   ),
@@ -192,7 +194,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q1 2021",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.85),
+                    titleColor: AppColors.white.withValues(alpha: 0.85),
                   ),
                 ),
                 Positioned(
@@ -202,7 +204,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q2 2021",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.77),
+                    titleColor: AppColors.white.withValues(alpha: 0.77),
                   ),
                 ),
                 Positioned(
@@ -212,7 +214,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q3 2022",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.72),
+                    titleColor: AppColors.white.withValues(alpha: 0.72),
                   ),
                 ),
                 Positioned(
@@ -222,7 +224,7 @@ class RoadMap extends StatelessWidget {
                     quarter: "Q4 2022",
                     title: "Releasing Soon ...",
                     description: "",
-                    titleColor: AppColors.white.withOpacity(0.67),
+                    titleColor: AppColors.white.withValues(alpha: 0.67),
                   ),
                 ),
               ],
@@ -283,28 +285,28 @@ class RoadMap extends StatelessWidget {
                   quarter: "Q1 2021",
                   title: "Releasing Soon ...",
                   description: "",
-                  titleColor: AppColors.white.withOpacity(0.85),
+                  titleColor: AppColors.white.withValues(alpha: 0.85),
                 ),
                 RoadMapSteps(
                   isMobile: true,
                   quarter: "Q2 2021",
                   title: "Releasing Soon ...",
                   description: "",
-                  titleColor: AppColors.white.withOpacity(0.77),
+                  titleColor: AppColors.white.withValues(alpha: 0.77),
                 ),
                 RoadMapSteps(
                   isMobile: true,
                   quarter: "Q3 2022",
                   title: "Releasing Soon ...",
                   description: "",
-                  titleColor: AppColors.white.withOpacity(0.72),
+                  titleColor: AppColors.white.withValues(alpha: 0.72),
                 ),
                 RoadMapSteps(
                   isMobile: true,
                   quarter: "Q4 2022",
                   title: "Releasing Soon ...",
                   description: "",
-                  titleColor: AppColors.white.withOpacity(0.67),
+                  titleColor: AppColors.white.withValues(alpha: 0.67),
                 ),
               ],
             ),
@@ -325,6 +327,7 @@ class RoadMap extends StatelessWidget {
 
 class RoadMapSteps extends StatelessWidget {
   const RoadMapSteps({
+    super.key,
     required this.title,
     required this.quarter,
     required this.titleColor,
@@ -342,12 +345,12 @@ class RoadMapSteps extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "$quarter",
+          quarter,
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             color: AppColors.white,
@@ -357,7 +360,7 @@ class RoadMapSteps extends StatelessWidget {
         ),
         SizedBox(width: isMobile ? size.width * 0.025 : size.width * 0.01),
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.white,
             shape: BoxShape.circle,
           ),
@@ -376,7 +379,7 @@ class RoadMapSteps extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "$title",
+                title,
                 textAlign: TextAlign.left,
                 style: GoogleFonts.roboto(
                   color: titleColor,
@@ -387,7 +390,7 @@ class RoadMapSteps extends StatelessWidget {
               ),
               SizedBox(height: size.height * 0.005),
               Text(
-                "$description",
+                description,
                 textAlign: TextAlign.left,
                 style: GoogleFonts.roboto(
                   color: AppColors.white,

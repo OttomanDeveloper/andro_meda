@@ -1,15 +1,13 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class InfoTextChild extends StatelessWidget {
-  const InfoTextChild({
-    required this.title,
-  });
+  const InfoTextChild({super.key, required this.title});
 
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,11 +22,11 @@ class InfoTextChild extends StatelessWidget {
         SizedBox(width: size.width * 0.02),
         Expanded(
           child: Text(
-            '$title',
+            title,
             textAlign: TextAlign.left,
             style: GoogleFonts.roboto(
               fontSize: size.height * 0.018,
-              color: AppColors.white.withOpacity(0.94),
+              color: AppColors.white.withValues(alpha: 0.94),
             ),
           ),
         ),

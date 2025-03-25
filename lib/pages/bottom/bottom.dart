@@ -1,6 +1,8 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class Bottom extends StatelessWidget {
+  const Bottom({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Responsive(
@@ -11,7 +13,7 @@ class Bottom extends StatelessWidget {
   }
 
   Widget _desktop(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Container(
       width: size.width,
       color: AppColors.parent,
@@ -34,7 +36,7 @@ class Bottom extends StatelessWidget {
               border: Border.symmetric(
                 horizontal: BorderSide(
                   width: size.width * 0.0003,
-                  color: AppColors.white.withOpacity(0.7),
+                  color: AppColors.white.withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -72,7 +74,7 @@ class Bottom extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            BottomLineInfo(
+                            const BottomLineInfo(
                               isLeft: true,
                               title: "Disclaimer",
                             ),
@@ -80,11 +82,12 @@ class Bottom extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(left: size.width * 0.01),
                               child: Text(
-                                "${AppText.disclaimer}",
+                                AppText.disclaimer,
                                 textAlign: TextAlign.left,
                                 style: GoogleFonts.roboto(
                                   fontSize: size.height * 0.019,
-                                  color: AppColors.white.withOpacity(0.87),
+                                  color:
+                                      AppColors.white.withValues(alpha: 0.87),
                                 ),
                               ),
                             ),
@@ -95,7 +98,7 @@ class Bottom extends StatelessWidget {
                     Expanded(
                       child: Column(
                         children: [
-                          BottomLineInfo(
+                          const BottomLineInfo(
                             isCenter: true,
                             title: "Important Links",
                           ),
@@ -132,7 +135,7 @@ class Bottom extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          BottomLineInfo(
+                          const BottomLineInfo(
                             isLeft: true,
                             title: "Social Links",
                           ),
@@ -176,11 +179,11 @@ class Bottom extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.017),
           Text(
-            "${AppText.copyright}",
+            AppText.copyright,
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: size.height * 0.018,
-              color: AppColors.white.withOpacity(0.65),
+              color: AppColors.white.withValues(alpha: 0.65),
             ),
           ),
           SizedBox(height: size.height * 0.005),
@@ -190,7 +193,7 @@ class Bottom extends StatelessWidget {
   }
 
   Widget _tablet(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Container(
       width: size.width,
       color: AppColors.parent,
@@ -213,7 +216,7 @@ class Bottom extends StatelessWidget {
               border: Border.symmetric(
                 horizontal: BorderSide(
                   width: size.width * 0.0003,
-                  color: AppColors.white.withOpacity(0.7),
+                  color: AppColors.white.withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -254,7 +257,7 @@ class Bottom extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            BottomLineInfo(
+                            const BottomLineInfo(
                               isTablet: true,
                               isLeft: true,
                               title: "Disclaimer",
@@ -268,12 +271,12 @@ class Bottom extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      "${AppText.disclaimer}",
+                                      AppText.disclaimer,
                                       textAlign: TextAlign.left,
                                       style: GoogleFonts.roboto(
                                         fontSize: size.height * 0.017,
-                                        color:
-                                            AppColors.white.withOpacity(0.87),
+                                        color: AppColors.white
+                                            .withValues(alpha: 0.87),
                                       ),
                                     ),
                                   ),
@@ -287,7 +290,7 @@ class Bottom extends StatelessWidget {
                     Expanded(
                       child: Column(
                         children: [
-                          BottomLineInfo(
+                          const BottomLineInfo(
                             isTablet: true,
                             isLeft: true,
                             title: "Important Links",
@@ -332,11 +335,11 @@ class Bottom extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.017),
           Text(
-            "${AppText.copyright}",
+            AppText.copyright,
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: size.height * 0.0165,
-              color: AppColors.white.withOpacity(0.7),
+              color: AppColors.white.withValues(alpha: 0.7),
             ),
           ),
           SizedBox(height: size.height * 0.005),
@@ -348,6 +351,7 @@ class Bottom extends StatelessWidget {
 
 class BottomLineInfo extends StatelessWidget {
   const BottomLineInfo({
+    super.key,
     required this.title,
     this.isLeft = false,
     this.isRight = false,
@@ -365,17 +369,22 @@ class BottomLineInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double textSize = isMobile
-        ? size.height * 0.015
-        : isTablet
-            ? size.height * 0.018
-            : size.height * 0.023;
-    double lineHeight = isMobile
-        ? size.height * 0.0175
-        : isTablet
-            ? size.height * 0.02
-            : size.height * 0.025;
+    final Size size = MediaQuery.sizeOf(context);
+    late final double textSize;
+    late final double lineHeight;
+    if (isMobile) {
+      textSize = size.height * 0.015;
+      lineHeight = size.height * 0.0175;
+    } else {
+      if (isTablet) {
+        textSize = size.height * 0.018;
+        lineHeight = size.height * 0.02;
+      } else {
+        textSize = size.height * 0.023;
+        lineHeight = size.height * 0.025;
+      }
+    }
+
     return Row(
       mainAxisAlignment: isLeft
           ? MainAxisAlignment.start
@@ -395,7 +404,7 @@ class BottomLineInfo extends StatelessWidget {
         ),
         SizedBox(width: size.width * 0.01),
         Text(
-          '$title',
+          title,
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             fontSize: textSize,
@@ -410,6 +419,7 @@ class BottomLineInfo extends StatelessWidget {
 
 class ImportantLink extends StatefulWidget {
   const ImportantLink({
+    super.key,
     required this.title,
     required this.onTap,
     this.isMobile = false,
@@ -422,19 +432,24 @@ class ImportantLink extends StatefulWidget {
   final bool isTablet;
 
   @override
-  _ImportantLinkState createState() => _ImportantLinkState();
+  State<ImportantLink> createState() => _ImportantLinkState();
 }
 
 class _ImportantLinkState extends State<ImportantLink> {
   Color color = Colors.white;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double textSize = widget.isMobile
-        ? size.height * 0.0167
-        : widget.isTablet
-            ? size.height * 0.018
-            : size.height * 0.02;
+    final Size size = MediaQuery.sizeOf(context);
+    late final double textSize;
+    if (widget.isMobile) {
+      textSize = size.height * 0.0167;
+    } else {
+      if (widget.isTablet) {
+        textSize = size.height * 0.018;
+      } else {
+        textSize = size.height * 0.02;
+      }
+    }
     return InkWell(
       onTap: () => widget.onTap(),
       onHover: (value) {
@@ -463,7 +478,7 @@ class _ImportantLinkState extends State<ImportantLink> {
             ),
             SizedBox(width: size.width * 0.01),
             Text(
-              '${widget.title}',
+              widget.title,
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 color: color,
@@ -479,6 +494,7 @@ class _ImportantLinkState extends State<ImportantLink> {
 
 class SocialLinks extends StatefulWidget {
   const SocialLinks({
+    super.key,
     required this.title,
     required this.onTap,
     this.isTablet = false,
@@ -491,19 +507,24 @@ class SocialLinks extends StatefulWidget {
   final bool isMobile;
 
   @override
-  _SocialLinksState createState() => _SocialLinksState();
+  State<SocialLinks> createState() => _SocialLinksState();
 }
 
 class _SocialLinksState extends State<SocialLinks> {
   Color color = Colors.white;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double textSize = widget.isMobile
-        ? size.height * 0.0167
-        : widget.isTablet
-            ? size.height * 0.018
-            : size.height * 0.02;
+    final Size size = MediaQuery.sizeOf(context);
+    late final double textSize;
+    if (widget.isMobile) {
+      textSize = size.height * 0.0167;
+    } else {
+      if (widget.isTablet) {
+        textSize = size.height * 0.018;
+      } else {
+        textSize = size.height * 0.02;
+      }
+    }
     return InkWell(
       onTap: () => widget.onTap(),
       onHover: (value) {
@@ -530,7 +551,7 @@ class _SocialLinksState extends State<SocialLinks> {
             ),
             SizedBox(width: size.width * 0.01),
             Text(
-              '${widget.title}',
+              widget.title,
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 color: color,

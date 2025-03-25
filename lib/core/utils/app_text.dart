@@ -1,12 +1,14 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
-class AppText {
+abstract class AppText {
+  const AppText._();
+
   static const String disclaimer =
       "Crypto currency are high-risk and speculative, and it is important that you understand the risks before you start trading. They are volatile: unexpected changes in market sentiment can lead to sharp and sudden moves in price.";
   static const String home =
       "Safe Andromedas vision is to connect the Crypto world with Gaming world and make simple & more easier to invest into Digital currencies.";
   static const String copyright =
-      "Copyright © 2021 ${AppSettings.shortName} PVT LTD. All rights reserved.";
+      "Copyright © 2025 ${AppSettings.shortName} PVT LTD. All rights reserved.";
   static const String desktopSocialBartext =
       "The Official Home of ${AppSettings.shortName}";
   static List<String> teamName = [

@@ -1,4 +1,6 @@
-class AppLinks {
+abstract class AppLinks {
+  const AppLinks._();
+
   static const String discord = "https://discord.gg/Kq4ZZzmU";
   static const String youtube =
       "https://youtube.com/channel/UCVqUhJe-g-CbMLCzNq74jLw";

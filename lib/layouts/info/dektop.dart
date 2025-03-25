@@ -1,14 +1,16 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class InfoDesktop extends StatelessWidget {
+  const InfoDesktop({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FastSecureCards(),
+        const FastSecureCards(),
         Container(
           color: AppColors.parent,
           padding: EdgeInsets.symmetric(
@@ -40,10 +42,8 @@ class InfoDesktop extends StatelessWidget {
                     ),
                     SizedBox(height: size.height * 0.03),
                     Padding(
-                      padding: EdgeInsets.only(
-                        left: size.width * 0.18,
-                      ),
-                      child: InfoText(),
+                      padding: EdgeInsets.only(left: size.width * 0.18),
+                      child: const InfoText(),
                     ),
                   ],
                 ),

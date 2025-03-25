@@ -2,6 +2,7 @@ import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class FastSecureCards extends StatelessWidget {
   const FastSecureCards({
+    super.key,
     this.isMobile = false,
     this.isTablet = false,
   });
@@ -11,21 +12,26 @@ class FastSecureCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double padding = isMobile
-        ? size.height * 0.01
-        : isTablet
-            ? size.height * 0.015
-            : size.height * 0.02;
-    double widgetPadding = isMobile
-        ? size.width * 0.04
-        : isTablet
-            ? size.width * 0.04
-            : size.width * 0.04;
+    final Size size = MediaQuery.sizeOf(context);
+    late final double padding;
+    late final double widgetPadding;
+    if (isMobile) {
+      padding = size.height * 0.01;
+      widgetPadding = size.width * 0.04;
+    } else {
+      if (isTablet) {
+        padding = size.height * 0.015;
+        widgetPadding = size.width * 0.04;
+      } else {
+        padding = size.height * 0.02;
+        widgetPadding = size.width * 0.04;
+      }
+    }
+
     return Container(
       width: size.width,
       padding: EdgeInsets.symmetric(vertical: padding),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -70,6 +76,7 @@ class IntroTokenTopButton extends StatelessWidget {
   final bool isTablet;
   final bool isMobile;
   const IntroTokenTopButton({
+    super.key,
     required this.title,
     required this.icon,
     required this.isTablet,
@@ -78,38 +85,40 @@ class IntroTokenTopButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.sizeOf(context);
     // Variables
-    double paddingVertical = isMobile
-        ? size.height * 0.011
-        : isTablet
-            ? size.height * 0.012
-            : size.height * 0.01;
-    double paddingHorizontal = isMobile
-        ? size.width * 0.05
-        : isTablet
-            ? size.width * 0.035
-            : size.width * 0.025;
-    double space = isMobile
-        ? size.width * 0.02
-        : isTablet
-            ? size.width * 0.015
-            : size.width * 0.009;
-    double rounded = isMobile
-        ? size.height * 0.008
-        : isTablet
-            ? size.height * 0.01
-            : size.height * 0.01;
-    double iconSize = isMobile
-        ? size.height * 0.021
-        : isTablet
-            ? size.height * 0.024
-            : size.height * 0.025;
-    double textSize = isMobile
-        ? size.height * 0.017
-        : isTablet
-            ? size.height * 0.02
-            : size.height * 0.021;
+    late final double space;
+    late final double rounded;
+    late final double iconSize;
+    late final double textSize;
+    late final double paddingVertical;
+    late final double paddingHorizontal;
+
+    if (isMobile) {
+      space = size.width * 0.02;
+      rounded = size.height * 0.008;
+      iconSize = size.height * 0.021;
+      textSize = size.height * 0.017;
+      paddingVertical = size.height * 0.011;
+      paddingHorizontal = size.width * 0.05;
+    } else {
+      if (isTablet) {
+        space = size.width * 0.015;
+        rounded = size.height * 0.01;
+        textSize = size.height * 0.02;
+        iconSize = size.height * 0.024;
+        paddingVertical = size.height * 0.012;
+        paddingHorizontal = size.width * 0.035;
+      } else {
+        space = size.width * 0.009;
+        rounded = size.height * 0.01;
+        iconSize = size.height * 0.025;
+        textSize = size.height * 0.021;
+        paddingVertical = size.height * 0.01;
+        paddingHorizontal = size.width * 0.025;
+      }
+    }
+
     // Widget Returning
     return Container(
       alignment: Alignment.center,
@@ -121,21 +130,17 @@ class IntroTokenTopButton extends StatelessWidget {
         color: AppColors.whatIconsBG,
         borderRadius: BorderRadius.circular(rounded),
         border: Border.all(
-          color: AppColors.white.withOpacity(0.2),
+          color: AppColors.white.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: iconSize,
-            color: AppColors.white,
-          ),
+          Icon(icon, size: iconSize, color: AppColors.white),
           SizedBox(width: space),
           Text(
-            "$title",
+            title,
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: textSize,
