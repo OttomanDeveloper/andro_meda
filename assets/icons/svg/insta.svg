@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36" viewBox="0 0 36 36">
+  <defs>
+    <filter id="Rectangle_27" x="0" y="0" width="36" height="36" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_81" data-name="Group 81" transform="translate(9 6)">
+    <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#Rectangle_27)">
+      <g id="Rectangle_27-2" data-name="Rectangle 27" transform="translate(9 6)" fill="none" stroke="rgba(213,213,213,0.77)" stroke-width="1">
+        <rect width="18" height="18" rx="5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="17" height="17" rx="4.5" fill="none"/>
+      </g>
+    </g>
+    <g id="instagram_3_" data-name="instagram (3)" transform="translate(4.808 4.812)">
+      <path id="Path_713" data-name="Path 713" d="M7.135,3.134c-1.639,0-3.2-.146-3.791,1.38a7.879,7.879,0,0,0-.21,2.621,8.35,8.35,0,0,0,.21,2.62c.593,1.527,2.163,1.381,3.79,1.381,1.57,0,3.188.163,3.79-1.381a7.866,7.866,0,0,0,.21-2.62c0-1.563.086-2.572-.672-3.33s-1.805-.671-3.329-.671Zm-.358.721c3.419-.005,3.855-.386,3.615,4.9-.085,1.868-1.507,1.663-3.256,1.663-3.187,0-3.279-.091-3.279-3.28,0-3.226.253-3.276,2.92-3.279Zm2.494.664a.48.48,0,1,0,.48.48A.48.48,0,0,0,9.271,4.519Zm-2.135.561A2.054,2.054,0,1,0,9.189,7.135,2.055,2.055,0,0,0,7.135,5.081Zm0,.721a1.334,1.334,0,0,1,0,2.667A1.334,1.334,0,0,1,7.135,5.8Z" transform="translate(-3.133 -3.13)" fill="#a4a7b8"/>
+    </g>
+  </g>
+</svg>
