@@ -1,50 +1,63 @@
-import 'package:safeandromeda/core/hooks/hooks.dart';
-
 abstract class AppText {
   const AppText._();
 
-  static const String disclaimer =
-      "Crypto currency are high-risk and speculative, and it is important that you understand the risks before you start trading. They are volatile: unexpected changes in market sentiment can lead to sharp and sudden moves in price.";
-  static const String home =
-      "Safe Andromedas vision is to connect the Crypto world with Gaming world and make simple & more easier to invest into Digital currencies.";
-  static const String copyright =
-      "Copyright © 2025 ${AppSettings.shortName} PVT LTD. All rights reserved.";
-  static const String desktopSocialBartext =
-      "The Official Home of ${AppSettings.shortName}";
-  static List<String> teamName = [
-    "Muhammad Usman",
-    "Abdul Muktadir",
-    "Akshat",
-    "Rehan Raza",
-    "Md E. Siam",
+  // Era names (used by progress bar)
+  static const List<String> eraNames = [
+    'The Big Bang',
+    'Cosmic Dark Ages',
+    'First Stars & Light',
+    'Galaxies Form',
+    'Our Solar System',
+    'Life Begins',
+    'Age of Giants',
+    'Rise of Humanity',
+    'The Future',
   ];
-  static List<String> teamRole = [
-    "CTO-Developer",
-    "Designer",
-    "CO-Founder",
-    "CEO-Founder",
-    "Marketing Manager",
+
+  // Era timestamps
+  static const List<String> eraTimestamps = [
+    '13.8 BILLION YEARS AGO',
+    '13.5 BILLION YEARS AGO',
+    '13.2 BILLION YEARS AGO',
+    '10 BILLION YEARS AGO',
+    '4.6 BILLION YEARS AGO',
+    '3.8 BILLION YEARS AGO',
+    '230 MILLION YEARS AGO',
+    '300,000 YEARS AGO',
+    'NOW → ∞',
   ];
-  static const String tokenIntroTitle =
-      "Safe Andromeda has developed Next level Andronomics";
-  static const List<String> tokenIntroDes = [
-    "Safe Andromeda is 100% Safe & Secured Token developed on Binance smart chain and keep a vision to Connect the Crypto world with Gaming World.",
-    "15% Transaction Fees charge on Buy/Sell.",
-    "Anti Whale Feature,If anyone tries to buy/sell more than 1% of the supply then he/she will be charged double Tax(30%).",
-    "Safe Andromeda looks forward to Build and Partner up with games in Future for growth of the project."
+
+  // Era headlines
+  static const List<String> eraHeadlines = [
+    'Everything Began',
+    'The Silent Cosmos',
+    'Let There Be Light',
+    'Islands of Stars',
+    'Our Place in the Void',
+    'Chemistry Became Biology',
+    'Titans of the Earth',
+    'The Spark of Consciousness',
+    'What Comes Next?',
   ];
-  static const String tokenIntroDescription =
-      "Andronomics - 10% Tax on Each Transaction. 3% Liquidity which helps to create higher price flooring and keep the price stable,4% Reward to all holders which is automatically distributed among all the holders to Reward them for holding SafeAndromeda,2% Goes to directly into the marketing wallet which is distributed in 2 parts-50% will be used for E- Gaming marketing (i.e-Hosting tournament, giveaways & ect) & 50% will be used for Real World marketing (i.e-Ads,Banner, promotion & ect),1% Goes To charity Wallet- These Funds will be donated Directly to charity.";
-  static const String aboutTokenTitle = "What is Safe Andromeda?";
-  static const String aboutTokenDescription =
-      "• Safe Andromeda is 100% Safe & Secured Token developed on Binance smart chain and keep a vision to Connect the Crypto world with Gaming World. • 10% Transaction Fees charge on Buy/Sell. • Anti Whale Feature,If anyone tries to buy/sell more than 1% of the supply then he/she will be charged double Tax(20%). • Safe Andromeda looks forward to Build and Partner up with games in Future for growth of the project.";
-  static const List<String> infoTexts = [
-    "15% transaction Fee on every Buy/sell.",
-    "3% Holders Reward -it is distributed among all the holders.",
-    "3% Liquidity fees- it helps to create higher price flooring.",
-    "6% Buy Back Whale Fee.",
-    "2% Marketing Fee- it will be used for Marketing.",
-    "1% Donation Fee- it will be donated to charity."
+
+  // Era descriptions (1 mind-blowing paragraph each)
+  static const List<String> eraDescriptions = [
+    'In a fraction of a second, the universe expanded from smaller than an atom to larger than a galaxy. The temperature was 10 trillion degrees. Every particle of matter that would ever exist was created in this moment.',
+    'For 200 million years, the universe was completely dark. No stars, no light — just an expanding fog of hydrogen and helium cooling in absolute silence. The longest night in history.',
+    'Gravity pulled hydrogen clouds together until they ignited. The first stars were monsters — 1,000 times more massive than our sun, burning blue-white and dying in spectacular supernovae that forged every heavy element in your body.',
+    'Billions of stars fell into gravitational dances, forming spiraling galaxies. The observable universe contains 2 trillion galaxies, each home to hundreds of billions of stars. We live in one called the Milky Way.',
+    'A cloud of gas and dust collapsed into a spinning disk. At its center, our Sun ignited. The remaining debris became 8 planets, 200+ moons, and billions of asteroids — all orbiting in the same direction, a memory of that original spin.',
+    'In warm shallow pools, simple molecules began copying themselves. Single cells appeared — the ancestor of every living thing. For 3 billion years, life was nothing but microbes. Then everything changed.',
+    'Dinosaurs ruled for 165 million years — 800 times longer than humans have existed. A Tyrannosaurus stood 12 meters tall. An Argentinosaurus weighed 70 tonnes. They vanished in a single day when a 10km asteroid struck.',
+    'A species learned to control fire, tell stories, and wonder about the stars. In 300,000 years we went from stone tools to quantum computers. We are the universe becoming aware of itself.',
+    '13.8 billion years of cosmic evolution. Stardust became atoms. Atoms became life. Life became conscious. And consciousness learned to create.',
   ];
-  static const String infoTitle = "What is Safe Andromeda?";
+
+  // Portfolio section
+  static const String portfolioIntro =
+      'This experience was crafted by';
+  static const String portfolioName = 'Muhammad Usman';
+  static const String portfolioRole = 'Flutter Developer';
+  static const String portfolioTagline =
+      'Building experiences that inspire.';
 }
