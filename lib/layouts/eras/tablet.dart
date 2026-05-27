@@ -1,10 +1,12 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
 class EraTabletLayout extends StatelessWidget {
-  const EraTabletLayout({super.key});
+  const EraTabletLayout({super.key, required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox();
+    return child;
   }
 }

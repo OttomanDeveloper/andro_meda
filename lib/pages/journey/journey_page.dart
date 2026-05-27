@@ -21,45 +21,65 @@ class JourneyPage extends StatelessWidget {
               controller: provider.scrollController,
               child: Column(
                 children: [
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const BigBangEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const BigBangEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const DarkAgesEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const DarkAgesEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const FirstStarsEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const FirstStarsEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const GalaxiesEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const GalaxiesEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const SolarSystemEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const SolarSystemEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const LifeBeginsEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const LifeBeginsEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const AgeOfGiantsEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const AgeOfGiantsEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const HumanityEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const HumanityEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height * AppSettings.eraHeightFactor,
-                    child: const FutureEra(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height * AppSettings.eraHeightFactor,
+                      child: const FutureEra(),
+                    ),
                   ),
-                  SizedBox(
-                    height: size.height,
-                    child: const PortfolioReveal(),
+                  RepaintBoundary(
+                    child: SizedBox(
+                      height: size.height,
+                      child: const PortfolioReveal(),
+                    ),
                   ),
                 ],
               ),

@@ -5,8 +5,48 @@ class DarkAgesEra extends StatelessWidget {
 
   static const int eraIndex = 1;
 
+  static const List<NebulaCloud> _wisps = [
+    NebulaCloud(
+        x: 0.3,
+        y: 0.4,
+        radius: 0.15,
+        color: AppColors.darkAgesHydrogen,
+        opacity: 0.08,
+        driftSpeed: 0.02),
+    NebulaCloud(
+        x: 0.6,
+        y: 0.6,
+        radius: 0.12,
+        color: AppColors.darkAgesWisp,
+        opacity: 0.05,
+        driftSpeed: -0.015),
+    NebulaCloud(
+        x: 0.8,
+        y: 0.3,
+        radius: 0.1,
+        color: AppColors.darkAgesHydrogen,
+        opacity: 0.06,
+        driftSpeed: 0.01),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return const SizedBox();
+    return Consumer<ScrollProvider>(
+      builder: (_, ScrollProvider pro, _) {
+        final double progress = pro.eraProgressFor(eraIndex);
+
+        return EraWrapper(
+          eraIndex: eraIndex,
+          backgroundColor: AppColors.darkAgesBg,
+          nextBackgroundColor: AppColors.firstStarsBg,
+          child: CustomPaint(
+            painter: NebulaPainter(
+              progress: progress,
+              clouds: _wisps,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

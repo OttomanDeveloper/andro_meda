@@ -5,6 +5,12 @@ class PortfolioReveal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox();
+    final Size size = MediaQuery.sizeOf(context);
+
+    return Responsive(
+      mobile: PortfolioMobileLayout(size: size),
+      tablet: PortfolioTabletLayout(size: size),
+      desktop: PortfolioDesktopLayout(size: size),
+    );
   }
 }

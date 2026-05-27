@@ -7,6 +7,8 @@ class BigBangEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.sizeOf(context);
+
     return Consumer<ScrollProvider>(
       builder: (_, ScrollProvider pro, _) {
         final double progress = pro.eraProgressFor(eraIndex);
@@ -14,6 +16,7 @@ class BigBangEra extends StatelessWidget {
         return EraWrapper(
           eraIndex: eraIndex,
           backgroundColor: AppColors.bigBangVoid,
+          nextBackgroundColor: AppColors.darkAgesBg,
           child: Stack(
             children: [
               Positioned.fill(
@@ -41,6 +44,33 @@ class BigBangEra extends StatelessWidget {
                   painter: ParticlePainter(
                     progress: progress,
                     particles: _bigBangParticles,
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: size.height * 0.08,
+                left: 0,
+                right: 0,
+                child: Opacity(
+                  opacity: (1.0 - progress * 4).clamp(0.0, 1.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'SCROLL TO EXPLORE',
+                        style: GoogleFonts.roboto(
+                          color: AppColors.white.withValues(alpha: 0.35),
+                          fontSize: size.height * 0.012,
+                          letterSpacing: 4,
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.01),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.white.withValues(alpha: 0.25),
+                        size: size.height * 0.025,
+                      ),
+                    ],
                   ),
                 ),
               ),
