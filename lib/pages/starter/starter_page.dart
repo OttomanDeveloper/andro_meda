@@ -63,7 +63,7 @@ class _StarterScreenState extends State<StarterScreen> {
           ),
         ),
         floatingActionButton: Consumer<NavProvider>(
-          builder: (_, NavProvider pro, __) {
+          builder: (_, NavProvider pro, _) {
             if (pro.isFloat) {
               return FloatingActionButton(
                 onPressed: () => pro.scroll(index: 0),
