@@ -7,9 +7,10 @@ class JourneyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
-    final ScrollProvider provider = context.read<ScrollProvider>();
-    provider.initScroll(size.height);
-    context.read<AnimationProvider>().start();
+    final ScrollProvider scrollPro = context.read<ScrollProvider>();
+    final AnimationProvider animPro = context.read<AnimationProvider>();
+    scrollPro.initScroll(size.height);
+    animPro.start();
 
     return MaterialApp(
       title: AppSettings.appName,
@@ -26,7 +27,7 @@ class JourneyPage extends StatelessWidget {
           child: Stack(
             children: [
               SingleChildScrollView(
-                controller: provider.scrollController,
+                controller: scrollPro.scrollController,
                 physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),

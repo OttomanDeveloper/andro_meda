@@ -5,10 +5,15 @@ class AnimationProvider extends ChangeNotifier {
   double get time => _time;
 
   Timer? _timer;
+  bool _disposed = false;
 
   void start() {
-    _timer?.cancel();
+    if (_timer != null) return;
     _timer = Timer.periodic(const Duration(milliseconds: 16), (_) {
+      if (_disposed) {
+        _timer?.cancel();
+        return;
+      }
       _time += 0.016;
       notifyListeners();
     });
@@ -16,7 +21,9 @@ class AnimationProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _disposed = true;
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 }
