@@ -89,8 +89,7 @@ class _SolarSystemPainter extends CustomPainter {
     final double vw = viewportWidth;
     final double vh = viewportHeight;
     final Offset sun = Offset(vw * 0.3, vh * 0.42);
-    final double opacity = progress.clamp(0.0, 1.0);
-    if (opacity < 0.02) return;
+    final double opacity = (progress * 2.0).clamp(0.0, 1.0);
 
     final Paint paint = Paint();
 
@@ -164,8 +163,8 @@ class _SolarSystemPainter extends CustomPainter {
 
     for (int i = 0; i < planets.length; i++) {
       final _Planet p = planets[i];
-      final double appear = (i / planets.length) * 0.5;
-      final double localProg = ((opacity - appear) / 0.5).clamp(0.0, 1.0);
+      final double appear = (i / planets.length) * 0.3;
+      final double localProg = ((opacity - appear) / 0.4).clamp(0.0, 1.0);
       if (localProg <= 0) continue;
 
       final double orbitW = p.radiusX * vw;
@@ -262,7 +261,7 @@ class _SolarSystemPainter extends CustomPainter {
     }
 
     // --- ASTEROID BELT between Mars and Jupiter ---
-    final double beltAppear = ((opacity - 0.3) / 0.3).clamp(0.0, 1.0);
+    final double beltAppear = ((opacity - 0.2) / 0.3).clamp(0.0, 1.0);
     if (beltAppear > 0) {
       final Random r = Random(55);
       paint.color = AppColors.white.withValues(alpha: 0.15 * beltAppear);

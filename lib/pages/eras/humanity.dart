@@ -110,8 +110,7 @@ class _HumanityScenePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final double w = size.width;
     final double vp = viewportHeight;
-    final double opacity = progress.clamp(0.0, 1.0);
-    if (opacity < 0.02) return;
+    final double opacity = (progress * 2.0).clamp(0.0, 1.0);
 
     final Paint paint = Paint();
 
