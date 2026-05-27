@@ -1,16 +1,42 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
-class JourneyPage extends StatelessWidget {
+class JourneyPage extends StatefulWidget {
   const JourneyPage({super.key});
+
+  @override
+  State<JourneyPage> createState() => _JourneyPageState();
+}
+
+class _JourneyPageState extends State<JourneyPage>
+    with SingleTickerProviderStateMixin {
+  late final Ticker _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    _ticker = createTicker(_onTick);
+    _ticker.start();
+  }
+
+  void _onTick(Duration elapsed) {
+    context.read<AnimationProvider>().updateTime(
+      elapsed.inMilliseconds / 1000.0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
     final ScrollProvider scrollPro = context.read<ScrollProvider>();
-    final AnimationProvider animPro = context.read<AnimationProvider>();
     scrollPro.initScroll(size.height);
-    animPro.start();
 
     return MaterialApp(
       title: AppSettings.appName,
@@ -151,7 +177,6 @@ class _CursorTrailPainter extends CustomPainter {
         paint,
       );
 
-      // Glow
       paint.color =
           const Color(0xffffffff).withValues(alpha: alpha * 0.3);
       paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
