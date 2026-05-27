@@ -86,6 +86,14 @@ class HumanityEra extends StatelessWidget {
                       ),
                       Positioned.fill(
                         child: CustomPaint(
+                          painter: _SkylinePainter(
+                            progress: progress,
+                            time: anim.time,
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
                           painter: ForegroundPainter(
                             time: anim.time,
                             color: AppColors.humanityFire,
@@ -265,4 +273,67 @@ class _FlameTongue {
   final double width;
   final double height;
   final int hue;
+}
+
+class _SkylinePainter extends CustomPainter {
+  const _SkylinePainter({required this.progress, required this.time});
+  final double progress;
+  final double time;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress < 0.3) return;
+    final double buildProgress = ((progress - 0.3) / 0.5).clamp(0.0, 1.0);
+    final double groundY = size.height * 0.85;
+
+    final Paint buildingPaint = Paint()
+      ..color = AppColors.humanityBg.withValues(alpha: 0.7);
+    final Paint windowPaint = Paint()
+      ..color = AppColors.humanityWarm.withValues(alpha: 0.4 * buildProgress);
+
+    final Random r = Random(42);
+    const int buildingCount = 20;
+    final double buildingWidth = size.width / buildingCount;
+
+    for (int i = 0; i < buildingCount; i++) {
+      final double maxHeight = (30 + r.nextDouble() * 80) * buildProgress;
+      final double x = i * buildingWidth + r.nextDouble() * 5;
+      final double w = buildingWidth * (0.5 + r.nextDouble() * 0.4);
+
+      // Building body
+      final Rect rect = Rect.fromLTWH(x, groundY - maxHeight, w, maxHeight);
+      canvas.drawRect(rect, buildingPaint);
+
+      // Windows (small lit squares)
+      if (maxHeight > 20) {
+        final int floors = (maxHeight / 12).floor();
+        final int windowsPerFloor = (w / 8).floor();
+        for (int f = 0; f < floors; f++) {
+          for (int wi = 0; wi < windowsPerFloor; wi++) {
+            if (r.nextDouble() > 0.4) {
+              final double wx = x + 3 + wi * 8;
+              final double wy = groundY - maxHeight + 4 + f * 12;
+              canvas.drawRect(
+                Rect.fromLTWH(wx, wy, 3, 4),
+                windowPaint,
+              );
+            }
+          }
+        }
+      }
+    }
+
+    // Ground line
+    canvas.drawLine(
+      Offset(0, groundY),
+      Offset(size.width, groundY),
+      Paint()
+        ..color = AppColors.humanityDark.withValues(alpha: 0.5)
+        ..strokeWidth = 1,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _SkylinePainter old) =>
+      old.progress != progress || old.time != time;
 }

@@ -58,6 +58,14 @@ class LifeBeginsEra extends StatelessWidget {
                       ),
                       Positioned.fill(
                         child: CustomPaint(
+                          painter: _DNAHelixPainter(
+                            progress: progress,
+                            time: anim.time,
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
                           painter: ParticlePainter(
                             progress: progress,
                             particles: _cellParticles,
@@ -103,4 +111,63 @@ class LifeBeginsEra extends StatelessWidget {
       );
     },
   );
+}
+
+class _DNAHelixPainter extends CustomPainter {
+  const _DNAHelixPainter({required this.progress, required this.time});
+  final double progress;
+  final double time;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress < 0.2) return;
+    final double helixOpacity = ((progress - 0.2) / 0.3).clamp(0.0, 0.2);
+    final Paint strandPaint = Paint()
+      ..color = AppColors.lifeGreen.withValues(alpha: helixOpacity)
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1);
+
+    final Paint rungPaint = Paint()
+      ..color = AppColors.lifeTeal.withValues(alpha: helixOpacity * 0.6)
+      ..strokeWidth = 0.8;
+
+    final double centerX = size.width * 0.75;
+    final double startY = size.height * 0.15;
+    final double endY = size.height * 0.85;
+    final double amplitude = size.width * 0.04;
+    const int points = 60;
+
+    final Path strand1 = Path();
+    final Path strand2 = Path();
+
+    for (int i = 0; i <= points; i++) {
+      final double t = i / points;
+      final double y = startY + (endY - startY) * t;
+      final double phase = t * pi * 6 + time * 0.8;
+
+      final double x1 = centerX + sin(phase) * amplitude;
+      final double x2 = centerX - sin(phase) * amplitude;
+
+      if (i == 0) {
+        strand1.moveTo(x1, y);
+        strand2.moveTo(x2, y);
+      } else {
+        strand1.lineTo(x1, y);
+        strand2.lineTo(x2, y);
+      }
+
+      // Rungs connecting the two strands every 5 points
+      if (i % 5 == 0 && i > 0) {
+        canvas.drawLine(Offset(x1, y), Offset(x2, y), rungPaint);
+      }
+    }
+
+    canvas.drawPath(strand1, strandPaint);
+    canvas.drawPath(strand2, strandPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _DNAHelixPainter old) =>
+      old.progress != progress || old.time != time;
 }

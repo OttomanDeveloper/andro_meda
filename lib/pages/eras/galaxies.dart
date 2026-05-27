@@ -85,6 +85,14 @@ class GalaxiesEra extends StatelessWidget {
                       ),
                       Positioned.fill(
                         child: CustomPaint(
+                          painter: _StarBirthPainter(
+                            progress: progress,
+                            time: anim.time,
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
                           painter: ForegroundPainter(
                             time: anim.time,
                             color: AppColors.galaxiesArm,
@@ -104,4 +112,63 @@ class GalaxiesEra extends StatelessWidget {
       },
     );
   }
+}
+
+class _StarBirthPainter extends CustomPainter {
+  const _StarBirthPainter({required this.progress, required this.time});
+  final double progress;
+  final double time;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress < 0.2) return;
+    final Paint paint = Paint();
+    final Random r = Random(33);
+    final Offset galaxyCenter = Offset(size.width * 0.5, size.height * 0.4);
+
+    for (int burst = 0; burst < 5; burst++) {
+      final double burstPhase = (time * 0.3 + burst * 1.7) % 3.0;
+      if (burstPhase > 1.0) continue;
+
+      final double angle = r.nextDouble() * pi * 2;
+      final double dist = 30 + r.nextDouble() * size.width * 0.2;
+      final Offset burstCenter = Offset(
+        galaxyCenter.dx + cos(angle + burst) * dist,
+        galaxyCenter.dy + sin(angle + burst) * dist * 0.6,
+      );
+
+      for (int ray = 0; ray < 6; ray++) {
+        final double rayAngle = (ray / 6) * pi * 2;
+        final double rayLength = burstPhase * 15;
+        final double alpha =
+            ((1.0 - burstPhase) * 0.5 * progress).clamp(0.0, 0.5);
+
+        paint.color = AppColors.firstStarsBright.withValues(alpha: alpha);
+        paint.strokeWidth = 1;
+        paint.style = PaintingStyle.stroke;
+        paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+
+        canvas.drawLine(
+          burstCenter,
+          Offset(
+            burstCenter.dx + cos(rayAngle) * rayLength,
+            burstCenter.dy + sin(rayAngle) * rayLength,
+          ),
+          paint,
+        );
+      }
+
+      // Center flash
+      paint.style = PaintingStyle.fill;
+      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+      paint.color = AppColors.firstStarsBright.withValues(
+          alpha: ((1.0 - burstPhase) * 0.6 * progress).clamp(0.0, 0.6));
+      canvas.drawCircle(burstCenter, 3 * (1.0 - burstPhase), paint);
+      paint.maskFilter = null;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _StarBirthPainter old) =>
+      old.progress != progress || old.time != time;
 }

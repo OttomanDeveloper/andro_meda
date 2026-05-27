@@ -95,6 +95,23 @@ class _GalaxySpiralPainter extends CustomPainter {
     final Paint paint = Paint();
     final Random random = Random(42);
 
+    // Dust lanes - draw darker arcs between spiral arms (behind bright dots)
+    final Random dustRandom = Random(43);
+    for (int arm = 0; arm < 3; arm++) {
+      final double laneOffset = (arm / 3) * pi * 2 + pi / 3 + rotation;
+      for (int i = 0; i < 40; i++) {
+        final double t = i / 40.0;
+        final double r = t * size.width * 0.28;
+        final double angle = laneOffset + t * pi * 2.8;
+        final double x = center.dx + r * cos(angle) + (dustRandom.nextDouble() - 0.5) * 8;
+        final double y = center.dy + r * sin(angle) * 0.6 + (dustRandom.nextDouble() - 0.5) * 5;
+
+        paint.color = AppColors.galaxiesBg.withValues(alpha: (0.3 * t * progress).clamp(0.0, 0.3));
+        canvas.drawCircle(Offset(x, y), 3 + dustRandom.nextDouble() * 4, paint);
+      }
+    }
+
+    // Bright spiral arm dots
     for (int arm = 0; arm < 3; arm++) {
       final double armOffset = arm * (pi * 2 / 3);
 
@@ -131,6 +148,17 @@ class _GalaxySpiralPainter extends CustomPainter {
     paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 40);
     canvas.drawCircle(center, 50, paint);
     paint.maskFilter = null;
+
+    // Galactic core rings
+    for (int ring = 0; ring < 4; ring++) {
+      final double ringRadius = 8.0 + ring * 6.0;
+      final double ringOpacity = (0.15 - ring * 0.03) * progress;
+      paint.color = AppColors.galaxiesCore.withValues(alpha: ringOpacity.clamp(0.0, 0.15));
+      paint.style = PaintingStyle.stroke;
+      paint.strokeWidth = 1.5;
+      canvas.drawCircle(center, ringRadius, paint);
+    }
+    paint.style = PaintingStyle.fill;
 
     // Core dot
     paint.color = AppColors.white.withValues(alpha: 0.8 * progress);

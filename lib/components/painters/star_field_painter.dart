@@ -76,7 +76,11 @@ class StarFieldPainter extends CustomPainter {
       // 3. Core (full opacity, no blur)
       paint.color = color.withValues(alpha: opacity);
       paint.maskFilter = null;
-      canvas.drawCircle(Offset(finalX, finalY), starSize, paint);
+      if (starSize > 1.5) {
+        _drawPointedStar(canvas, Offset(finalX, finalY), starSize, paint);
+      } else {
+        canvas.drawCircle(Offset(finalX, finalY), starSize, paint);
+      }
 
       // 4. Cross spikes for large bright stars
       if (starSize > 1.8) {
@@ -99,6 +103,26 @@ class StarFieldPainter extends CustomPainter {
         paint.style = PaintingStyle.fill;
       }
     }
+  }
+
+  void _drawPointedStar(Canvas canvas, Offset center, double size, Paint paint) {
+    final Path path = Path();
+    final double inner = size * 0.3;
+    final double outer = size;
+
+    for (int i = 0; i < 4; i++) {
+      final double angle = (i / 4) * pi * 2 - pi / 2;
+      final double nextAngle = ((i + 0.5) / 4) * pi * 2 - pi / 2;
+
+      if (i == 0) {
+        path.moveTo(center.dx + cos(angle) * outer, center.dy + sin(angle) * outer);
+      } else {
+        path.lineTo(center.dx + cos(angle) * outer, center.dy + sin(angle) * outer);
+      }
+      path.lineTo(center.dx + cos(nextAngle) * inner, center.dy + sin(nextAngle) * inner);
+    }
+    path.close();
+    canvas.drawPath(path, paint);
   }
 
   @override

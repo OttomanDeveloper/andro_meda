@@ -51,6 +51,14 @@ class FutureEra extends StatelessWidget {
                         ),
                       ),
                       Positioned.fill(
+                        child: CustomPaint(
+                          painter: _DataStreamPainter(
+                            progress: progress,
+                            time: anim.time,
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
                         child: Container(
                           color: AppColors.futureLight
                               .withValues(alpha: lightProgress * 0.8),
@@ -203,4 +211,51 @@ class _FutureTechPainter extends CustomPainter {
   bool shouldRepaint(covariant _FutureTechPainter oldDelegate) =>
       progress != oldDelegate.progress ||
       lightProgress != oldDelegate.lightProgress;
+}
+
+class _DataStreamPainter extends CustomPainter {
+  const _DataStreamPainter({required this.progress, required this.time});
+  final double progress;
+  final double time;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress < 0.1) return;
+    final double streamOpacity = ((progress - 0.1) / 0.4).clamp(0.0, 0.15);
+    final Paint paint = Paint();
+    final Random r = Random(77);
+
+    for (int col = 0; col < 15; col++) {
+      final double x = (col / 15) * size.width + r.nextDouble() * 20;
+      final double speed = 0.5 + r.nextDouble() * 1.5;
+
+      for (int dot = 0; dot < 20; dot++) {
+        final double baseY = size.height - (dot * size.height * 0.05);
+        final double y = baseY - ((time * speed * 30) % size.height);
+        final double wrappedY = y < 0 ? y + size.height : y;
+
+        final double dotSize = 1 + r.nextDouble() * 2;
+        final bool isDash = r.nextDouble() > 0.6;
+
+        paint.color = AppColors.futureGlow
+            .withValues(alpha: streamOpacity * (0.5 + r.nextDouble() * 0.5));
+
+        if (isDash) {
+          canvas.drawRRect(
+            RRect.fromRectAndRadius(
+              Rect.fromLTWH(x, wrappedY, dotSize, dotSize * 4),
+              const Radius.circular(1),
+            ),
+            paint,
+          );
+        } else {
+          canvas.drawCircle(Offset(x, wrappedY), dotSize * 0.5, paint);
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DataStreamPainter old) =>
+      old.progress != progress || old.time != time;
 }

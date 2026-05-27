@@ -71,6 +71,14 @@ class BigBangEra extends StatelessWidget {
                   ),
                   Positioned.fill(
                     child: CustomPaint(
+                      painter: _ShockwavePainter(
+                        progress: progress,
+                        time: anim.time,
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: CustomPaint(
                       painter: _RadialStreakPainter(
                         progress: progress,
                         time: anim.time,
@@ -160,6 +168,40 @@ class BigBangEra extends StatelessWidget {
       },
     );
   }
+}
+
+class _ShockwavePainter extends CustomPainter {
+  const _ShockwavePainter({required this.progress, required this.time});
+  final double progress;
+  final double time;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress < 0.02 || progress > 0.5) return;
+    final Offset center = Offset(size.width * 0.5, size.height * 0.4);
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    for (int i = 0; i < 3; i++) {
+      final double ringDelay = i * 0.06;
+      final double ringProgress =
+          ((progress - 0.02 - ringDelay) / 0.3).clamp(0.0, 1.0);
+      if (ringProgress <= 0) continue;
+
+      final double radius = ringProgress * size.width * 0.5;
+      final double opacity = ((1.0 - ringProgress) * 0.4).clamp(0.0, 0.4);
+
+      paint.color = AppColors.bigBangMid.withValues(alpha: opacity);
+      paint.maskFilter =
+          MaskFilter.blur(BlurStyle.normal, 3 + ringProgress * 10);
+      canvas.drawCircle(center, radius, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ShockwavePainter old) =>
+      old.progress != progress;
 }
 
 class _RadialStreakPainter extends CustomPainter {

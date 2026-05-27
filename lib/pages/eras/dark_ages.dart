@@ -56,6 +56,32 @@ class DarkAgesEra extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Positioned(
+                        bottom: MediaQuery.sizeOf(context).height * 0.12,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: _TypewriterText(
+                            text: '200 million years of silence...',
+                            progress: progress,
+                            startAt: 0.15,
+                            style: GoogleFonts.roboto(
+                              color:
+                                  AppColors.white.withValues(alpha: 0.15),
+                              fontSize:
+                                  MediaQuery.sizeOf(context).height * 0.016,
+                              letterSpacing: 3,
+                              shadows: [
+                                Shadow(
+                                  color: AppColors.darkAgesWisp
+                                      .withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       Positioned.fill(
                         child: CustomPaint(
                           painter: ForegroundPainter(
@@ -75,6 +101,32 @@ class DarkAgesEra extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _TypewriterText extends StatelessWidget {
+  const _TypewriterText({
+    required this.text,
+    required this.progress,
+    required this.startAt,
+    required this.style,
+  });
+
+  final String text;
+  final double progress;
+  final double startAt;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final double typeProgress = ((progress - startAt) / 0.3).clamp(0.0, 1.0);
+    final int charCount = (typeProgress * text.length).floor();
+    if (charCount <= 0) return const SizedBox();
+
+    return Text(
+      text.substring(0, charCount),
+      style: style,
     );
   }
 }

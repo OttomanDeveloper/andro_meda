@@ -76,19 +76,23 @@ class OrbitPainter extends CustomPainter {
 
       if (localProgress <= 0.0) continue;
 
-      // Orbital ring with increased opacity
+      // Orbital ring draws itself progressively as the era scrolls
+      final double sweepAngle = localProgress * pi * 2;
       final Paint ringPaint = Paint()
-        ..color =
-            AppColors.white.withValues(alpha: 0.13 * localProgress)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1;
+        ..strokeWidth = 1
+        ..color =
+            AppColors.white.withValues(alpha: 0.13 * localProgress);
 
-      canvas.drawOval(
+      canvas.drawArc(
         Rect.fromCenter(
           center: center,
           width: orbit.radiusX * size.width * 2,
           height: orbit.radiusY * size.height * 2,
         ),
+        0, // start angle
+        sweepAngle, // sweep
+        false,
         ringPaint,
       );
 
@@ -129,6 +133,22 @@ class OrbitPainter extends CustomPainter {
         planetGlowPaint,
       );
 
+      // Saturn rings on 5th planet (index 4)
+      if (i == 4) {
+        final Paint ringsPaint = Paint()
+          ..color = orbit.planetColor.withValues(alpha: 0.3 * localProgress)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.5;
+        canvas.drawOval(
+          Rect.fromCenter(
+            center: Offset(px, py),
+            width: orbit.planetSize * 4,
+            height: orbit.planetSize * 1.2,
+          ),
+          ringsPaint,
+        );
+      }
+
       // Planet core
       final Paint planetPaint = Paint()..color = orbit.planetColor;
       canvas.drawCircle(
@@ -136,6 +156,34 @@ class OrbitPainter extends CustomPainter {
         orbit.planetSize * localProgress,
         planetPaint,
       );
+
+      // Lit-side gradient highlight
+      final double sunAngle = atan2(py - center.dy, px - center.dx);
+      final Paint highlightPaint = Paint()
+        ..shader = RadialGradient(
+          center: Alignment(-cos(sunAngle) * 0.5, -sin(sunAngle) * 0.5),
+          radius: 1.0,
+          colors: [
+            orbit.planetColor.withValues(alpha: 0.6 * localProgress),
+            orbit.planetColor.withValues(alpha: 0.0),
+          ],
+        ).createShader(Rect.fromCircle(center: Offset(px, py), radius: orbit.planetSize));
+      canvas.drawCircle(Offset(px, py), orbit.planetSize * localProgress, highlightPaint);
+
+      // Planet name label
+      if (orbit.name.isNotEmpty && localProgress > 0.5) {
+        final TextPainter tp = TextPainter(
+          text: TextSpan(
+            text: orbit.name,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.3 * localProgress),
+              fontSize: 9,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        tp.paint(canvas, Offset(px + orbit.planetSize + 4, py - 5));
+      }
     }
   }
 
@@ -151,6 +199,7 @@ class OrbitRing {
     required this.planetColor,
     required this.planetSize,
     this.speed = 1.0,
+    this.name = '',
   });
 
   final double radiusX;
@@ -158,4 +207,5 @@ class OrbitRing {
   final Color planetColor;
   final double planetSize;
   final double speed;
+  final String name;
 }

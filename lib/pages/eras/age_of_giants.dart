@@ -79,6 +79,14 @@ class AgeOfGiantsEra extends StatelessWidget {
                       ),
                       Positioned.fill(
                         child: CustomPaint(
+                          painter: _GroundFogPainter(
+                            progress: progress,
+                            time: anim.time,
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
                           painter: ForegroundPainter(
                             time: anim.time,
                             color: AppColors.giantsLeaf,
@@ -98,4 +106,46 @@ class AgeOfGiantsEra extends StatelessWidget {
       },
     );
   }
+}
+
+class _GroundFogPainter extends CustomPainter {
+  const _GroundFogPainter({required this.progress, required this.time});
+  final double progress;
+  final double time;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double fogProgress = progress.clamp(0.0, 1.0);
+    final Paint paint = Paint();
+    final double fogTop = size.height * (0.9 - fogProgress * 0.3);
+
+    // Multiple fog layers at slightly different heights
+    for (int layer = 0; layer < 4; layer++) {
+      final double layerY = fogTop + layer * size.height * 0.05;
+      final double layerOpacity = (0.08 + layer * 0.03) * fogProgress;
+      final double drift = sin(time * 0.2 + layer) * 30;
+
+      paint.shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          AppColors.giantsForest.withValues(alpha: 0.0),
+          AppColors.giantsForest.withValues(alpha: layerOpacity),
+          AppColors.giantsBg.withValues(alpha: layerOpacity * 1.5),
+        ],
+        stops: const [0.0, 0.3, 1.0],
+      ).createShader(
+          Rect.fromLTWH(0, layerY, size.width, size.height - layerY));
+
+      canvas.drawRect(
+        Rect.fromLTWH(
+            drift - 30, layerY, size.width + 60, size.height - layerY),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _GroundFogPainter old) =>
+      old.progress != progress || old.time != time;
 }
