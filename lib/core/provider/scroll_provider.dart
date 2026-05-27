@@ -16,10 +16,14 @@ class ScrollProvider extends ChangeNotifier {
   String get eraLabel => AppText.eraNames[_currentEra];
 
   double _viewportHeight = 0.0;
+  bool _initialized = false;
 
   void initScroll(double viewportHeight) {
     _viewportHeight = viewportHeight;
-    _scrollController.addListener(_onScroll);
+    if (!_initialized) {
+      _scrollController.addListener(_onScroll);
+      _initialized = true;
+    }
   }
 
   void _onScroll() {

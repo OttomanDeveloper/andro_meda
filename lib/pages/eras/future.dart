@@ -7,9 +7,10 @@ class FutureEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ScrollProvider>(
-      builder: (_, ScrollProvider pro, _) {
-        final double progress = pro.eraProgressFor(eraIndex);
+    return Selector<ScrollProvider, double>(
+      selector: (_, ScrollProvider pro) =>
+          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+      builder: (_, double progress, _) {
         final double lightProgress = (progress * 1.5).clamp(0.0, 1.0);
 
         return EraWrapper(

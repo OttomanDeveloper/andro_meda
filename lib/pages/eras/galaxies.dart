@@ -38,21 +38,25 @@ class GalaxiesEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ScrollProvider>(
-      builder: (_, ScrollProvider pro, _) {
-        final double progress = pro.eraProgressFor(eraIndex);
+    final int starCount = AppSettings.particleCount(context, desktop: 200);
+
+    return Selector<ScrollProvider, double>(
+      selector: (_, ScrollProvider pro) =>
+          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+      builder: (_, double progress, _) {
 
         return EraWrapper(
           eraIndex: eraIndex,
           backgroundColor: AppColors.galaxiesBg,
           nextBackgroundColor: AppColors.solarBg,
+          interactionHint: 'DRAG TO ROTATE',
           child: Stack(
             children: [
               Positioned.fill(
                 child: CustomPaint(
                   painter: StarFieldPainter(
                     progress: progress,
-                    starCount: 200,
+                    starCount: starCount,
                     baseColor: AppColors.white,
                     maxOpacity: 0.6,
                     seed: 123,

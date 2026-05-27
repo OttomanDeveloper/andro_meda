@@ -19,6 +19,9 @@ class JourneyPage extends StatelessWidget {
           children: [
             SingleChildScrollView(
               controller: provider.scrollController,
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
               child: Column(
                 children: [
                   RepaintBoundary(

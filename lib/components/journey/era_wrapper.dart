@@ -8,6 +8,7 @@ class EraWrapper extends StatelessWidget {
     this.backgroundColor = AppColors.black,
     this.nextBackgroundColor = AppColors.black,
     this.useDarkText = false,
+    this.interactionHint,
   });
 
   final int eraIndex;
@@ -15,6 +16,7 @@ class EraWrapper extends StatelessWidget {
   final Color backgroundColor;
   final Color nextBackgroundColor;
   final bool useDarkText;
+  final String? interactionHint;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,7 @@ class EraWrapper extends StatelessWidget {
                   child: _EraTextContent(
                     eraIndex: eraIndex,
                     useDarkText: useDarkText,
+                    interactionHint: interactionHint,
                   ),
                 ),
               ),
@@ -78,17 +81,24 @@ class _EraTextContent extends StatelessWidget {
   const _EraTextContent({
     required this.eraIndex,
     required this.useDarkText,
+    this.interactionHint,
   });
 
   final int eraIndex;
   final bool useDarkText;
+  final String? interactionHint;
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
+    final bool isMobile = Responsive.isMobile(context);
+    final bool isTablet = Responsive.isTablet(context);
+    final double scaleFactor = isMobile ? 0.65 : isTablet ? 0.8 : 1.0;
+    final double horizontalPadding = isMobile ? 0.06 : 0.1;
+    final double descriptionWidth = isMobile ? 0.85 : isTablet ? 0.65 : 0.5;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+      padding: EdgeInsets.symmetric(horizontal: size.width * horizontalPadding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -98,7 +108,7 @@ class _EraTextContent extends StatelessWidget {
               color: useDarkText
                   ? AppColors.portfolioText.withValues(alpha: 0.4)
                   : AppColors.white.withValues(alpha: 0.4),
-              fontSize: size.height * 0.014,
+              fontSize: size.height * 0.014 * scaleFactor,
               letterSpacing: 6,
             ),
           ),
@@ -108,13 +118,13 @@ class _EraTextContent extends StatelessWidget {
             textAlign: TextAlign.center,
             style: GoogleFonts.russoOne(
               color: useDarkText ? AppColors.portfolioText : AppColors.white,
-              fontSize: size.height * 0.05,
+              fontSize: size.height * 0.05 * scaleFactor,
               letterSpacing: 3,
             ),
           ),
           SizedBox(height: size.height * 0.03),
           SizedBox(
-            width: size.width * 0.5,
+            width: size.width * descriptionWidth,
             child: Text(
               AppText.eraDescriptions[eraIndex],
               textAlign: TextAlign.center,
@@ -122,11 +132,22 @@ class _EraTextContent extends StatelessWidget {
                 color: useDarkText
                     ? AppColors.portfolioText.withValues(alpha: 0.6)
                     : AppColors.white.withValues(alpha: 0.6),
-                fontSize: size.height * 0.018,
+                fontSize: size.height * 0.018 * scaleFactor,
                 height: 1.7,
               ),
             ),
           ),
+          if (interactionHint != null) ...[
+            SizedBox(height: size.height * 0.025),
+            Text(
+              interactionHint!,
+              style: GoogleFonts.roboto(
+                color: AppColors.white.withValues(alpha: 0.3),
+                fontSize: size.height * 0.012 * scaleFactor,
+                letterSpacing: 3,
+              ),
+            ),
+          ],
         ],
       ),
     );

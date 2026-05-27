@@ -31,14 +31,18 @@ class AgeOfGiantsEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ScrollProvider>(
-      builder: (_, ScrollProvider pro, _) {
-        final double progress = pro.eraProgressFor(eraIndex);
+    final bool isMobile = Responsive.isMobile(context);
+
+    return Selector<ScrollProvider, double>(
+      selector: (_, ScrollProvider pro) =>
+          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+      builder: (_, double progress, _) {
 
         return EraWrapper(
           eraIndex: eraIndex,
           backgroundColor: AppColors.giantsBg,
           nextBackgroundColor: AppColors.humanityBg,
+          interactionHint: isMobile ? 'TAP TO REVEAL' : 'HOVER TO REVEAL',
           child: Stack(
             children: [
               Positioned.fill(

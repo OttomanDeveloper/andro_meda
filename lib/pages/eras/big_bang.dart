@@ -8,10 +8,12 @@ class BigBangEra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
+    final int count = AppSettings.particleCount(context, desktop: 80);
 
-    return Consumer<ScrollProvider>(
-      builder: (_, ScrollProvider pro, _) {
-        final double progress = pro.eraProgressFor(eraIndex);
+    return Selector<ScrollProvider, double>(
+      selector: (_, ScrollProvider pro) =>
+          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+      builder: (_, double progress, _) {
 
         return EraWrapper(
           eraIndex: eraIndex,
@@ -43,7 +45,7 @@ class BigBangEra extends StatelessWidget {
                 child: CustomPaint(
                   painter: ParticlePainter(
                     progress: progress,
-                    particles: _bigBangParticles,
+                    particles: _generateParticles(count),
                   ),
                 ),
               ),
@@ -81,25 +83,27 @@ class BigBangEra extends StatelessWidget {
     );
   }
 
-  static final List<Particle> _bigBangParticles = List<Particle>.generate(
-    80,
-    (int i) {
-      final Random r = Random(i);
-      final double angle = r.nextDouble() * pi * 2;
-      final double speed = 0.1 + r.nextDouble() * 0.4;
-      return Particle(
-        startX: 0.5,
-        startY: 0.4,
-        velocityX: cos(angle) * speed,
-        velocityY: sin(angle) * speed,
-        color: Color.lerp(
-          AppColors.bigBangCenter,
-          AppColors.bigBangOuter,
-          r.nextDouble(),
-        )!,
-        size: 1.0 + r.nextDouble() * 2.5,
-        birthProgress: r.nextDouble() * 0.3,
-      );
-    },
-  );
+  static List<Particle> _generateParticles(int count) {
+    return List<Particle>.generate(
+      count,
+      (int i) {
+        final Random r = Random(i);
+        final double angle = r.nextDouble() * pi * 2;
+        final double speed = 0.1 + r.nextDouble() * 0.4;
+        return Particle(
+          startX: 0.5,
+          startY: 0.4,
+          velocityX: cos(angle) * speed,
+          velocityY: sin(angle) * speed,
+          color: Color.lerp(
+            AppColors.bigBangCenter,
+            AppColors.bigBangOuter,
+            r.nextDouble(),
+          )!,
+          size: 1.0 + r.nextDouble() * 2.5,
+          birthProgress: r.nextDouble() * 0.3,
+        );
+      },
+    );
+  }
 }

@@ -7,14 +7,18 @@ class FirstStarsEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ScrollProvider>(
-      builder: (_, ScrollProvider pro, _) {
-        final double progress = pro.eraProgressFor(eraIndex);
+    final int starCount = AppSettings.particleCount(context, desktop: 150);
+
+    return Selector<ScrollProvider, double>(
+      selector: (_, ScrollProvider pro) =>
+          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+      builder: (_, double progress, _) {
 
         return EraWrapper(
           eraIndex: eraIndex,
           backgroundColor: AppColors.firstStarsBg,
           nextBackgroundColor: AppColors.galaxiesBg,
+          interactionHint: 'TAP TO IGNITE STARS',
           child: Stack(
             children: [
               Positioned.fill(
@@ -35,7 +39,7 @@ class FirstStarsEra extends StatelessWidget {
                 child: CustomPaint(
                   painter: StarFieldPainter(
                     progress: progress,
-                    starCount: 150,
+                    starCount: starCount,
                     baseColor: AppColors.firstStarsGlow,
                     maxOpacity: progress.clamp(0.0, 1.0),
                     seed: 77,

@@ -31,9 +31,10 @@ class LifeBeginsEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ScrollProvider>(
-      builder: (_, ScrollProvider pro, _) {
-        final double progress = pro.eraProgressFor(eraIndex);
+    return Selector<ScrollProvider, double>(
+      selector: (_, ScrollProvider pro) =>
+          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+      builder: (_, double progress, _) {
 
         return EraWrapper(
           eraIndex: eraIndex,
