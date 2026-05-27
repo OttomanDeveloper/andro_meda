@@ -9,77 +9,96 @@ class HumanityEra extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
 
-    return Consumer<AnimationProvider>(
-      builder: (_, AnimationProvider anim, _) {
-        return Selector<ScrollProvider, double>(
-          selector: (_, ScrollProvider pro) =>
-              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-          builder: (_, double progress, _) {
-            return EraWrapper(
-              eraIndex: eraIndex,
-              backgroundColor: AppColors.humanityBg,
-              nextBackgroundColor: AppColors.futureBg,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: StarFieldPainter(
-                        progress: progress,
-                        time: anim.time,
-                        starCount: 60,
-                        baseColor: AppColors.white,
-                        maxOpacity: 0.2,
-                        seed: 789,
+    return Consumer<CursorProvider>(
+      builder: (_, CursorProvider cursor, _) {
+        return Consumer<AnimationProvider>(
+          builder: (_, AnimationProvider anim, _) {
+            return Selector<ScrollProvider, double>(
+              selector: (_, ScrollProvider pro) =>
+                  (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+              builder: (_, double progress, _) {
+                return EraWrapper(
+                  eraIndex: eraIndex,
+                  backgroundColor: AppColors.humanityBg,
+                  nextBackgroundColor: AppColors.futureBg,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: StarFieldPainter(
+                            progress: progress,
+                            time: anim.time,
+                            starCount: 60,
+                            baseColor: AppColors.white,
+                            maxOpacity: 0.2,
+                            seed: 789,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: _HorizonPainter(progress: progress),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: NebulaPainter(
-                        progress: progress,
-                        time: anim.time,
-                        clouds: const [
-                          NebulaCloud(
-                              x: 0.5,
-                              y: 0.6,
-                              radius: 0.25,
-                              color: AppColors.humanityFire,
-                              opacity: 0.4,
-                              driftSpeed: 0.0),
-                          NebulaCloud(
-                              x: 0.5,
-                              y: 0.55,
-                              radius: 0.35,
-                              color: AppColors.humanityWarm,
-                              opacity: 0.2,
-                              driftSpeed: 0.0),
-                          NebulaCloud(
-                              x: 0.48,
-                              y: 0.65,
-                              radius: 0.15,
-                              color: AppColors.humanityFire,
-                              opacity: 0.35,
-                              driftSpeed: 0.0),
-                        ],
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: _HorizonPainter(progress: progress),
+                        ),
                       ),
-                    ),
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: NebulaPainter(
+                            progress: progress,
+                            time: anim.time,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                            clouds: const [
+                              NebulaCloud(
+                                  x: 0.5,
+                                  y: 0.6,
+                                  radius: 0.25,
+                                  color: AppColors.humanityFire,
+                                  opacity: 0.4,
+                                  driftSpeed: 0.0),
+                              NebulaCloud(
+                                  x: 0.5,
+                                  y: 0.55,
+                                  radius: 0.35,
+                                  color: AppColors.humanityWarm,
+                                  opacity: 0.2,
+                                  driftSpeed: 0.0),
+                              NebulaCloud(
+                                  x: 0.48,
+                                  y: 0.65,
+                                  radius: 0.15,
+                                  color: AppColors.humanityFire,
+                                  opacity: 0.35,
+                                  driftSpeed: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: size.height * 0.18,
+                        left: 0,
+                        right: 0,
+                        height: size.height * 0.25,
+                        child: CustomPaint(
+                          painter: _FirePainter(progress: progress),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: ForegroundPainter(
+                            time: anim.time,
+                            color: AppColors.humanityFire,
+                            seed: eraIndex * 100 + 99,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    bottom: size.height * 0.18,
-                    left: 0,
-                    right: 0,
-                    height: size.height * 0.25,
-                    child: CustomPaint(
-                      painter: _FirePainter(progress: progress),
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             );
           },
         );

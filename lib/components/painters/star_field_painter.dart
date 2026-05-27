@@ -8,6 +8,8 @@ class StarFieldPainter extends CustomPainter {
     this.baseColor = AppColors.white,
     this.seed = 42,
     this.maxOpacity = 1.0,
+    this.cursorX = 0.0,
+    this.cursorY = 0.0,
   });
 
   final double progress;
@@ -16,6 +18,8 @@ class StarFieldPainter extends CustomPainter {
   final Color baseColor;
   final int seed;
   final double maxOpacity;
+  final double cursorX;
+  final double cursorY;
 
   /// Star color temperature: warm white, cool blue, or pale yellow based on index seed.
   Color _starColor(int index) {
@@ -45,9 +49,12 @@ class StarFieldPainter extends CustomPainter {
       final double twinkleSpeed = 1.0 + random.nextDouble() * 2.0;
 
       final double parallax = progress * size.height * 0.1 * depth;
-      final double y = baseY - parallax;
+      final double parallaxX = cursorX * 15.0 * depth;
+      final double parallaxY = cursorY * 10.0 * depth;
+      final double finalX = x + parallaxX;
+      final double finalY = baseY - parallax + parallaxY;
 
-      if (y < -10 || y > size.height + 10) continue;
+      if (finalY < -10 || finalY > size.height + 10) continue;
 
       // Ambient twinkle: sinusoidal opacity modulation driven by time
       final double twinkle =
@@ -59,17 +66,17 @@ class StarFieldPainter extends CustomPainter {
       // 1. Outer glow (6x radius, very soft)
       paint.color = color.withValues(alpha: opacity * 0.08);
       paint.maskFilter = MaskFilter.blur(BlurStyle.normal, starSize * 4);
-      canvas.drawCircle(Offset(x, y), starSize * 6, paint);
+      canvas.drawCircle(Offset(finalX, finalY), starSize * 6, paint);
 
       // 2. Mid glow (3x radius)
       paint.color = color.withValues(alpha: opacity * 0.2);
       paint.maskFilter = MaskFilter.blur(BlurStyle.normal, starSize * 2);
-      canvas.drawCircle(Offset(x, y), starSize * 3, paint);
+      canvas.drawCircle(Offset(finalX, finalY), starSize * 3, paint);
 
       // 3. Core (full opacity, no blur)
       paint.color = color.withValues(alpha: opacity);
       paint.maskFilter = null;
-      canvas.drawCircle(Offset(x, y), starSize, paint);
+      canvas.drawCircle(Offset(finalX, finalY), starSize, paint);
 
       // 4. Cross spikes for large bright stars
       if (starSize > 1.8) {
@@ -79,14 +86,14 @@ class StarFieldPainter extends CustomPainter {
         paint.style = PaintingStyle.stroke;
         // Horizontal spike
         canvas.drawLine(
-          Offset(x - spikeLength, y),
-          Offset(x + spikeLength, y),
+          Offset(finalX - spikeLength, finalY),
+          Offset(finalX + spikeLength, finalY),
           paint,
         );
         // Vertical spike
         canvas.drawLine(
-          Offset(x, y - spikeLength),
-          Offset(x, y + spikeLength),
+          Offset(finalX, finalY - spikeLength),
+          Offset(finalX, finalY + spikeLength),
           paint,
         );
         paint.style = PaintingStyle.fill;
@@ -96,5 +103,8 @@ class StarFieldPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant StarFieldPainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.time != time;
+      oldDelegate.progress != progress ||
+      oldDelegate.time != time ||
+      oldDelegate.cursorX != cursorX ||
+      oldDelegate.cursorY != cursorY;
 }

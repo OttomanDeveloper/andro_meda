@@ -13,6 +13,11 @@ class ScrollProvider extends ChangeNotifier {
   double _eraProgress = 0.0;
   double get eraProgress => _eraProgress;
 
+  double _scrollVelocity = 0.0;
+  double get scrollVelocity => _scrollVelocity;
+
+  double _lastOffset = 0.0;
+
   String get eraLabel => AppText.eraNames[_currentEra];
 
   double _viewportHeight = 0.0;
@@ -27,14 +32,17 @@ class ScrollProvider extends ChangeNotifier {
   }
 
   void _onScroll() {
-    final double offset = _scrollController.offset;
+    final double newOffset = _scrollController.offset;
+    _scrollVelocity = (newOffset - _lastOffset).abs().clamp(0.0, 50.0) / 50.0;
+    _lastOffset = newOffset;
+
     final double eraHeight = _viewportHeight * AppSettings.eraHeightFactor;
     final double totalHeight = eraHeight * AppSettings.eraCount;
 
-    _overallProgress = (offset / totalHeight).clamp(0.0, 1.0);
+    _overallProgress = (newOffset / totalHeight).clamp(0.0, 1.0);
 
-    final int newEra = (offset / eraHeight).floor().clamp(0, AppSettings.eraCount - 1);
-    _eraProgress = ((offset - (newEra * eraHeight)) / eraHeight).clamp(0.0, 1.0);
+    final int newEra = (newOffset / eraHeight).floor().clamp(0, AppSettings.eraCount - 1);
+    _eraProgress = ((newOffset - (newEra * eraHeight)) / eraHeight).clamp(0.0, 1.0);
 
     if (newEra != _currentEra) {
       _currentEra = newEra;

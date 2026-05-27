@@ -5,11 +5,15 @@ class NebulaPainter extends CustomPainter {
     required this.progress,
     required this.clouds,
     this.time = 0.0,
+    this.cursorX = 0.0,
+    this.cursorY = 0.0,
   });
 
   final double progress;
   final List<NebulaCloud> clouds;
   final double time;
+  final double cursorX;
+  final double cursorY;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -24,8 +28,8 @@ class NebulaPainter extends CustomPainter {
           cos(time * 0.25 + i * 2.3) * size.height * 0.005;
 
       final Offset center = Offset(
-        cloud.x * size.width + drift + ambientDriftX,
-        cloud.y * size.height + ambientDriftY,
+        cloud.x * size.width + drift + ambientDriftX + cursorX * 20.0 * cloud.driftSpeed,
+        cloud.y * size.height + ambientDriftY + cursorY * 15.0 * cloud.driftSpeed,
       );
 
       final double baseOpacity =
@@ -105,7 +109,10 @@ class NebulaPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant NebulaPainter oldDelegate) =>
-      oldDelegate.progress != progress || oldDelegate.time != time;
+      oldDelegate.progress != progress ||
+      oldDelegate.time != time ||
+      oldDelegate.cursorX != cursorX ||
+      oldDelegate.cursorY != cursorY;
 }
 
 class NebulaCloud {

@@ -7,53 +7,70 @@ class FutureEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AnimationProvider>(
-      builder: (_, AnimationProvider anim, _) {
-        return Selector<ScrollProvider, double>(
-          selector: (_, ScrollProvider pro) =>
-              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-          builder: (_, double progress, _) {
-            final double lightProgress = (progress * 1.5).clamp(0.0, 1.0);
+    return Consumer<CursorProvider>(
+      builder: (_, CursorProvider cursor, _) {
+        return Consumer<AnimationProvider>(
+          builder: (_, AnimationProvider anim, _) {
+            return Selector<ScrollProvider, double>(
+              selector: (_, ScrollProvider pro) =>
+                  (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+              builder: (_, double progress, _) {
+                final double lightProgress = (progress * 1.5).clamp(0.0, 1.0);
 
-            return EraWrapper(
-              eraIndex: eraIndex,
-              backgroundColor: Color.lerp(
-                AppColors.futureBg,
-                AppColors.futureLight,
-                lightProgress,
-              )!,
-              nextBackgroundColor: AppColors.portfolioBg,
-              useDarkText: progress > 0.4,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: StarFieldPainter(
-                        progress: progress,
-                        time: anim.time,
-                        starCount: 100,
-                        baseColor: AppColors.white,
-                        maxOpacity: (1.0 - lightProgress).clamp(0.0, 0.8),
-                        seed: 999,
+                return EraWrapper(
+                  eraIndex: eraIndex,
+                  backgroundColor: Color.lerp(
+                    AppColors.futureBg,
+                    AppColors.futureLight,
+                    lightProgress,
+                  )!,
+                  nextBackgroundColor: AppColors.portfolioBg,
+                  useDarkText: progress > 0.4,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: StarFieldPainter(
+                            progress: progress,
+                            time: anim.time,
+                            starCount: 100,
+                            baseColor: AppColors.white,
+                            maxOpacity: (1.0 - lightProgress).clamp(0.0, 0.8),
+                            seed: 999,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: _FutureTechPainter(
-                        progress: progress,
-                        lightProgress: lightProgress,
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: _FutureTechPainter(
+                            progress: progress,
+                            lightProgress: lightProgress,
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned.fill(
+                        child: Container(
+                          color: AppColors.futureLight
+                              .withValues(alpha: lightProgress * 0.8),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: ForegroundPainter(
+                            time: anim.time,
+                            color: AppColors.futureGlow,
+                            seed: eraIndex * 100 + 99,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned.fill(
-                    child: Container(
-                      color: AppColors.futureLight
-                          .withValues(alpha: lightProgress * 0.8),
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             );
           },
         );

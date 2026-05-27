@@ -8,6 +8,7 @@ export 'package:safeandromeda/core/utils/response.dart';
 // Providers
 export 'package:safeandromeda/core/provider/scroll_provider.dart';
 export 'package:safeandromeda/core/provider/animation_provider.dart';
+export 'package:safeandromeda/core/provider/cursor_provider.dart';
 
 // Pages
 export 'package:safeandromeda/pages/journey/journey_page.dart';
@@ -40,6 +41,7 @@ export 'package:safeandromeda/components/painters/star_field_painter.dart';
 export 'package:safeandromeda/components/painters/nebula_painter.dart';
 export 'package:safeandromeda/components/painters/particle_painter.dart';
 export 'package:safeandromeda/components/painters/orbit_painter.dart';
+export 'package:safeandromeda/components/painters/foreground_painter.dart';
 
 // Packages
 export 'dart:async';

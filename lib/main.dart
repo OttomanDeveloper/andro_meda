@@ -6,6 +6,7 @@ Future<void> main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => ScrollProvider()),
       ChangeNotifierProvider(create: (_) => AnimationProvider()),
+      ChangeNotifierProvider(create: (_) => CursorProvider()),
     ],
     child: const JourneyPage(),
   ));

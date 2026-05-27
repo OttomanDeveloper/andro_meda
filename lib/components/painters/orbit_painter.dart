@@ -42,6 +42,30 @@ class OrbitPainter extends CustomPainter {
     final Paint sunPaint = Paint()..color = centerColor;
     canvas.drawCircle(center, centerRadius, sunPaint);
 
+    // Lens flare horizontal
+    final Paint flarePaint = Paint()
+      ..color = centerColor.withValues(alpha: 0.15)
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
+    canvas.drawLine(
+      Offset(center.dx - centerRadius * 8, center.dy),
+      Offset(center.dx + centerRadius * 8, center.dy),
+      flarePaint,
+    );
+    // Lens flare vertical
+    canvas.drawLine(
+      Offset(center.dx, center.dy - centerRadius * 5),
+      Offset(center.dx, center.dy + centerRadius * 5),
+      flarePaint,
+    );
+
+    // Atmospheric glow
+    final Paint atmoGlowPaint = Paint()
+      ..color = centerColor.withValues(alpha: 0.03)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 80);
+    canvas.drawCircle(center, centerRadius * 12, atmoGlowPaint);
+
     final double drawProgress = progress.clamp(0.0, 1.0);
 
     for (int i = 0; i < orbits.length; i++) {

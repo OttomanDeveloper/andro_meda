@@ -31,38 +31,55 @@ class LifeBeginsEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AnimationProvider>(
-      builder: (_, AnimationProvider anim, _) {
-        return Selector<ScrollProvider, double>(
-          selector: (_, ScrollProvider pro) =>
-              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-          builder: (_, double progress, _) {
-            return EraWrapper(
-              eraIndex: eraIndex,
-              backgroundColor: AppColors.lifeBg,
-              nextBackgroundColor: AppColors.giantsBg,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: NebulaPainter(
-                        progress: progress,
-                        clouds: _pools,
-                        time: anim.time,
+    return Consumer<CursorProvider>(
+      builder: (_, CursorProvider cursor, _) {
+        return Consumer<AnimationProvider>(
+          builder: (_, AnimationProvider anim, _) {
+            return Selector<ScrollProvider, double>(
+              selector: (_, ScrollProvider pro) =>
+                  (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+              builder: (_, double progress, _) {
+                return EraWrapper(
+                  eraIndex: eraIndex,
+                  backgroundColor: AppColors.lifeBg,
+                  nextBackgroundColor: AppColors.giantsBg,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: NebulaPainter(
+                            progress: progress,
+                            clouds: _pools,
+                            time: anim.time,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: ParticlePainter(
-                        progress: progress,
-                        particles: _cellParticles,
-                        time: anim.time,
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: ParticlePainter(
+                            progress: progress,
+                            particles: _cellParticles,
+                            time: anim.time,
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: ForegroundPainter(
+                            time: anim.time,
+                            color: AppColors.lifeGreen,
+                            seed: eraIndex * 100 + 99,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             );
           },
         );

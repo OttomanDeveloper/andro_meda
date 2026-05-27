@@ -40,45 +40,64 @@ class GalaxiesEra extends StatelessWidget {
   Widget build(BuildContext context) {
     final int starCount = AppSettings.particleCount(context, desktop: 200);
 
-    return Consumer<AnimationProvider>(
-      builder: (_, AnimationProvider anim, _) {
-        return Selector<ScrollProvider, double>(
-          selector: (_, ScrollProvider pro) =>
-              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-          builder: (_, double progress, _) {
-            return EraWrapper(
-              eraIndex: eraIndex,
-              backgroundColor: AppColors.galaxiesBg,
-              nextBackgroundColor: AppColors.solarBg,
-              interactionHint: 'DRAG TO ROTATE',
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: StarFieldPainter(
-                        progress: progress,
-                        time: anim.time,
-                        starCount: starCount,
-                        baseColor: AppColors.white,
-                        maxOpacity: 0.6,
-                        seed: 123,
+    return Consumer<CursorProvider>(
+      builder: (_, CursorProvider cursor, _) {
+        return Consumer<AnimationProvider>(
+          builder: (_, AnimationProvider anim, _) {
+            return Selector<ScrollProvider, double>(
+              selector: (_, ScrollProvider pro) =>
+                  (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+              builder: (_, double progress, _) {
+                return EraWrapper(
+                  eraIndex: eraIndex,
+                  backgroundColor: AppColors.galaxiesBg,
+                  nextBackgroundColor: AppColors.solarBg,
+                  interactionHint: 'DRAG TO ROTATE',
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: StarFieldPainter(
+                            progress: progress,
+                            time: anim.time,
+                            starCount: starCount,
+                            baseColor: AppColors.white,
+                            maxOpacity: 0.6,
+                            seed: 123,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: NebulaPainter(
-                        progress: progress,
-                        clouds: _galacticClouds,
-                        time: anim.time,
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: NebulaPainter(
+                            progress: progress,
+                            clouds: _galacticClouds,
+                            time: anim.time,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned.fill(
+                        child: GalaxyRotator(eraProgress: progress),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: ForegroundPainter(
+                            time: anim.time,
+                            color: AppColors.galaxiesArm,
+                            seed: eraIndex * 100 + 99,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned.fill(
-                    child: GalaxyRotator(eraProgress: progress),
-                  ),
-                ],
-              ),
+                );
+              },
             );
           },
         );

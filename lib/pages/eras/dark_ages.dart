@@ -31,23 +31,46 @@ class DarkAgesEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AnimationProvider>(
-      builder: (_, AnimationProvider anim, _) {
-        return Selector<ScrollProvider, double>(
-          selector: (_, ScrollProvider pro) =>
-              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-          builder: (_, double progress, _) {
-            return EraWrapper(
-              eraIndex: eraIndex,
-              backgroundColor: AppColors.darkAgesBg,
-              nextBackgroundColor: AppColors.firstStarsBg,
-              child: CustomPaint(
-                painter: NebulaPainter(
-                  progress: progress,
-                  clouds: _wisps,
-                  time: anim.time,
-                ),
-              ),
+    return Consumer<CursorProvider>(
+      builder: (_, CursorProvider cursor, _) {
+        return Consumer<AnimationProvider>(
+          builder: (_, AnimationProvider anim, _) {
+            return Selector<ScrollProvider, double>(
+              selector: (_, ScrollProvider pro) =>
+                  (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+              builder: (_, double progress, _) {
+                return EraWrapper(
+                  eraIndex: eraIndex,
+                  backgroundColor: AppColors.darkAgesBg,
+                  nextBackgroundColor: AppColors.firstStarsBg,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: NebulaPainter(
+                            progress: progress,
+                            clouds: _wisps,
+                            time: anim.time,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: CustomPaint(
+                          painter: ForegroundPainter(
+                            time: anim.time,
+                            color: AppColors.darkAgesHydrogen,
+                            seed: eraIndex * 100 + 99,
+                            cursorX: cursor.normalizedX,
+                            cursorY: cursor.normalizedY,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             );
           },
         );

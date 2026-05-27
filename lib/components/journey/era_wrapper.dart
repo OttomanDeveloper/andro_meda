@@ -50,12 +50,19 @@ class EraWrapper extends StatelessWidget {
                 left: 0,
                 right: 0,
                 top: (size.height * 0.3) + parallaxOffset,
-                child: Opacity(
-                  opacity: textOpacity,
-                  child: _EraTextContent(
-                    eraIndex: eraIndex,
-                    useDarkText: useDarkText,
-                    interactionHint: interactionHint,
+                child: Transform.translate(
+                  offset: Offset(0, _entranceOffset(progress, size.height)),
+                  child: Transform.scale(
+                    scale: _entranceScale(progress),
+                    child: Opacity(
+                      opacity: textOpacity,
+                      child: _EraTextContent(
+                        eraIndex: eraIndex,
+                        useDarkText: useDarkText,
+                        interactionHint: interactionHint,
+                        progress: progress,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -64,6 +71,26 @@ class EraWrapper extends StatelessWidget {
         );
       },
     );
+  }
+
+  double _entranceOffset(double progress, double viewportHeight) {
+    if (progress < 0.15) {
+      final double t = progress / 0.15;
+      return viewportHeight * 0.05 * (1.0 - Curves.easeOutCubic.transform(t));
+    }
+    if (progress > 0.75) {
+      final double t = (progress - 0.75) / 0.25;
+      return viewportHeight * -0.03 * Curves.easeInCubic.transform(t);
+    }
+    return 0;
+  }
+
+  double _entranceScale(double progress) {
+    if (progress < 0.15) {
+      final double t = progress / 0.15;
+      return 0.92 + 0.08 * Curves.easeOutCubic.transform(t);
+    }
+    return 1.0;
   }
 
   double _textOpacity(double progress) {
@@ -81,11 +108,13 @@ class _EraTextContent extends StatelessWidget {
   const _EraTextContent({
     required this.eraIndex,
     required this.useDarkText,
+    required this.progress,
     this.interactionHint,
   });
 
   final int eraIndex;
   final bool useDarkText;
+  final double progress;
   final String? interactionHint;
 
   @override
@@ -123,9 +152,8 @@ class _EraTextContent extends StatelessWidget {
             ),
           ),
           SizedBox(height: size.height * 0.02),
-          Text(
-            AppText.eraHeadlines[eraIndex],
-            textAlign: TextAlign.center,
+          _AnimatedHeadline(
+            text: AppText.eraHeadlines[eraIndex],
             style: GoogleFonts.russoOne(
               color: headlineColor,
               fontSize: size.height * 0.055 * scaleFactor,
@@ -141,6 +169,7 @@ class _EraTextContent extends StatelessWidget {
                 ),
               ],
             ),
+            progress: progress,
           ),
           SizedBox(height: size.height * 0.02),
           Container(
@@ -190,6 +219,42 @@ class _EraTextContent extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+class _AnimatedHeadline extends StatelessWidget {
+  const _AnimatedHeadline({
+    required this.text,
+    required this.style,
+    required this.progress,
+  });
+
+  final String text;
+  final TextStyle style;
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final double charProgress = ((progress - 0.05) / 0.15).clamp(0.0, 1.0);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(text.length, (int i) {
+        final double delay = i / text.length;
+        final double charOpacity =
+            ((charProgress - delay * 0.5) / 0.5).clamp(0.0, 1.0);
+        final double charOffset = (1.0 - charOpacity) * 8;
+
+        return Transform.translate(
+          offset: Offset(0, charOffset),
+          child: Opacity(
+            opacity: charOpacity,
+            child: Text(text[i], style: style),
+          ),
+        );
+      }),
     );
   }
 }
