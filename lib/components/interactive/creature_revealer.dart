@@ -31,9 +31,9 @@ class _CreatureRevealerBody extends StatelessWidget {
   final double eraProgress;
 
   static const List<_CreatureData> _creatures = [
-    _CreatureData(x: 0.1, y: 0.68, width: 0.18, height: 0.22, label: 'T-Rex · 12m tall'),
-    _CreatureData(x: 0.35, y: 0.6, width: 0.27, height: 0.28, label: 'Argentinosaurus · 35m long'),
-    _CreatureData(x: 0.68, y: 0.7, width: 0.15, height: 0.12, label: 'Triceratops · 9m long'),
+    _CreatureData(x: 0.05, y: 0.28, width: 0.22, height: 0.25, label: 'T-Rex · 12m tall'),
+    _CreatureData(x: 0.32, y: 0.2, width: 0.32, height: 0.32, label: 'Argentinosaurus · 35m long'),
+    _CreatureData(x: 0.7, y: 0.3, width: 0.2, height: 0.16, label: 'Triceratops · 9m long'),
   ];
 
   @override
@@ -58,14 +58,11 @@ class _CreatureRevealerBody extends StatelessWidget {
                 child: GestureDetector(
                   onTap: isMobile ? () => pro.reveal(i) : null,
                   behavior: HitTestBehavior.translucent,
-                  child: AnimatedOpacity(
-                    opacity: isRevealed ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 600),
-                    child: AnimatedScale(
-                      scale: isRevealed ? 1.0 : 0.5,
-                      duration: const Duration(milliseconds: 800),
-                      curve: Curves.easeOutBack,
-                      child: Column(
+                  child: AnimatedScale(
+                    scale: isRevealed ? 1.0 : 0.9,
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutBack,
+                    child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
@@ -73,28 +70,33 @@ class _CreatureRevealerBody extends StatelessWidget {
                               painter: _CreatureSilhouettePainter(
                                 creatureIndex: i,
                                 glowColor: AppColors.giantsLeaf,
+                                isRevealed: isRevealed,
                               ),
                               size: Size.infinite,
                             ),
                           ),
                           SizedBox(height: size.height * 0.008),
-                          Text(
-                            c.label,
-                            style: GoogleFonts.roboto(
-                              color: AppColors.giantsLeaf.withValues(alpha: 0.7),
-                              fontSize: size.height * 0.012,
-                              shadows: [
-                                Shadow(
-                                  color: AppColors.giantsLeaf.withValues(alpha: 0.3),
-                                  blurRadius: 6,
-                                ),
-                              ],
+                          AnimatedOpacity(
+                            opacity: isRevealed ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 600),
+                            child: Text(
+                              c.label,
+                              style: GoogleFonts.roboto(
+                                color: AppColors.giantsLeaf.withValues(alpha: 0.8),
+                                fontSize: size.height * 0.014,
+                                fontWeight: FontWeight.w500,
+                                shadows: [
+                                  Shadow(
+                                    color: AppColors.giantsLeaf.withValues(alpha: 0.5),
+                                    blurRadius: 8,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
                 ),
               ),
             );
@@ -109,10 +111,12 @@ class _CreatureSilhouettePainter extends CustomPainter {
   const _CreatureSilhouettePainter({
     required this.creatureIndex,
     required this.glowColor,
+    this.isRevealed = false,
   });
 
   final int creatureIndex;
   final Color glowColor;
+  final bool isRevealed;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -125,24 +129,38 @@ class _CreatureSilhouettePainter extends CustomPainter {
       _ => _buildTriceratopsPath(w, h),
     };
 
-    // Glow shadow behind silhouette
-    final Paint glowPaint = Paint()
-      ..color = glowColor.withValues(alpha: 0.15)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
-    canvas.drawPath(path, glowPaint);
+    if (isRevealed) {
+      // Bright glow behind silhouette
+      final Paint glowPaint = Paint()
+        ..color = glowColor.withValues(alpha: 0.3)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20);
+      canvas.drawPath(path, glowPaint);
 
-    // Silhouette fill
-    final Paint fillPaint = Paint()
-      ..color = const Color(0xff0a1508)
-      ..style = PaintingStyle.fill;
-    canvas.drawPath(path, fillPaint);
+      // Silhouette fill — slightly lighter when revealed
+      final Paint fillPaint = Paint()
+        ..color = const Color(0xff0f2010)
+        ..style = PaintingStyle.fill;
+      canvas.drawPath(path, fillPaint);
 
-    // Subtle edge highlight
-    final Paint edgePaint = Paint()
-      ..color = glowColor.withValues(alpha: 0.2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
-    canvas.drawPath(path, edgePaint);
+      // Bright edge highlight
+      final Paint edgePaint = Paint()
+        ..color = glowColor.withValues(alpha: 0.5)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+      canvas.drawPath(path, edgePaint);
+    } else {
+      // Dark shadow silhouette — always visible
+      final Paint shadowPaint = Paint()
+        ..color = const Color(0xff080e05).withValues(alpha: 0.6)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+      canvas.drawPath(path, shadowPaint);
+
+      final Paint fillPaint = Paint()
+        ..color = const Color(0xff0a1508).withValues(alpha: 0.5)
+        ..style = PaintingStyle.fill;
+      canvas.drawPath(path, fillPaint);
+    }
   }
 
   Path _buildTRexPath(double w, double h) {
