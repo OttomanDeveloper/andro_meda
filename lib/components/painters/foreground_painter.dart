@@ -27,7 +27,7 @@ class ForegroundPainter extends CustomPainter {
       final double baseY = random.nextDouble() * size.height;
       final double particleSize = 20 + random.nextDouble() * 40;
       final double driftPhase = random.nextDouble() * pi * 2;
-      final double driftSpeed = 0.3 + random.nextDouble() * 0.5;
+      final double driftSpeed = 0.45 + random.nextDouble() * 0.75;
 
       final double x = baseX +
           sin(time * driftSpeed + driftPhase) * 30 +

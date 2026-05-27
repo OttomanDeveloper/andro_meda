@@ -31,9 +31,9 @@ class _CreatureRevealerBody extends StatelessWidget {
   final double eraProgress;
 
   static const List<_CreatureData> _creatures = [
-    _CreatureData(x: 0.15, y: 0.7, width: 0.12, height: 0.15, label: 'T-Rex · 12m tall'),
-    _CreatureData(x: 0.4, y: 0.65, width: 0.18, height: 0.2, label: 'Argentinosaurus · 35m long'),
-    _CreatureData(x: 0.7, y: 0.72, width: 0.1, height: 0.08, label: 'Triceratops · 9m long'),
+    _CreatureData(x: 0.1, y: 0.68, width: 0.18, height: 0.22, label: 'T-Rex · 12m tall'),
+    _CreatureData(x: 0.35, y: 0.6, width: 0.27, height: 0.28, label: 'Argentinosaurus · 35m long'),
+    _CreatureData(x: 0.68, y: 0.7, width: 0.15, height: 0.12, label: 'Triceratops · 9m long'),
   ];
 
   @override
@@ -62,7 +62,7 @@ class _CreatureRevealerBody extends StatelessWidget {
                     opacity: isRevealed ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 600),
                     child: AnimatedScale(
-                      scale: isRevealed ? 1.0 : 0.7,
+                      scale: isRevealed ? 1.0 : 0.5,
                       duration: const Duration(milliseconds: 800),
                       curve: Curves.easeOutBack,
                       child: Column(

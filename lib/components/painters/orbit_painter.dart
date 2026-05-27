@@ -20,23 +20,23 @@ class OrbitPainter extends CustomPainter {
     final Offset center = Offset(size.width * 0.35, size.height * 0.45);
 
     // Sun: multi-layer glow
-    // Outermost glow (8x radius)
+    // Outermost glow (11x radius)
     final Paint outerGlowPaint = Paint()
       ..color = centerColor.withValues(alpha: 0.15)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 60);
-    canvas.drawCircle(center, centerRadius * 8, outerGlowPaint);
+    canvas.drawCircle(center, centerRadius * 11, outerGlowPaint);
 
-    // Mid glow (5x radius)
+    // Mid glow (7x radius)
     final Paint midGlowPaint = Paint()
       ..color = centerColor.withValues(alpha: 0.28)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 40);
-    canvas.drawCircle(center, centerRadius * 5, midGlowPaint);
+    canvas.drawCircle(center, centerRadius * 7, midGlowPaint);
 
-    // Inner glow (3x radius)
+    // Inner glow (4x radius)
     final Paint innerGlowPaint = Paint()
       ..color = centerColor.withValues(alpha: 0.4)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 30);
-    canvas.drawCircle(center, centerRadius * 3, innerGlowPaint);
+    canvas.drawCircle(center, centerRadius * 4, innerGlowPaint);
 
     // Sun core
     final Paint sunPaint = Paint()..color = centerColor;
@@ -64,7 +64,7 @@ class OrbitPainter extends CustomPainter {
     final Paint atmoGlowPaint = Paint()
       ..color = centerColor.withValues(alpha: 0.1)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 80);
-    canvas.drawCircle(center, centerRadius * 12, atmoGlowPaint);
+    canvas.drawCircle(center, centerRadius * 16, atmoGlowPaint);
 
     final double drawProgress = progress.clamp(0.0, 1.0);
 
@@ -98,7 +98,7 @@ class OrbitPainter extends CustomPainter {
 
       // Planet angle: uses both scroll progress and time for continuous orbit
       final double angle =
-          progress * orbit.speed * pi * 2 + time * orbit.speed * 0.5;
+          progress * orbit.speed * pi * 2 + time * orbit.speed * 1.0;
       final double px = center.dx + orbit.radiusX * size.width * cos(angle);
       final double py = center.dy + orbit.radiusY * size.height * sin(angle);
 

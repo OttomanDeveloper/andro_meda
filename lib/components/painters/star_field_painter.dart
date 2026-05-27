@@ -46,7 +46,7 @@ class StarFieldPainter extends CustomPainter {
       final double baseY = random.nextDouble() * size.height;
       final double starSize = random.nextDouble() * 2.0 + 0.5;
       final double depth = random.nextDouble();
-      final double twinkleSpeed = 1.0 + random.nextDouble() * 2.0;
+      final double twinkleSpeed = 2.0 + random.nextDouble() * 3.0;
 
       final double parallax = progress * size.height * 0.1 * depth;
       final double parallaxX = cursorX * 15.0 * depth;

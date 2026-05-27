@@ -108,7 +108,7 @@ class _FutureTechPainter extends CustomPainter {
 
   void _drawGrid(Canvas canvas, double w, double h) {
     // Subtle grid pattern that fades in as background lightens
-    final double gridOpacity = (lightProgress * 0.075).clamp(0.0, 0.075);
+    final double gridOpacity = (lightProgress * 0.1).clamp(0.0, 0.1);
     if (gridOpacity < 0.003) return;
 
     final bool isDark = lightProgress < 0.5;
@@ -144,8 +144,8 @@ class _FutureTechPainter extends CustomPainter {
 
     for (int i = 0; i < lineYs.length; i++) {
       // Pulse effect: each line pulses at a different phase
-      final double pulse = (sin((progress * 6.283 * 2) + i * 2.1) * 0.5 + 0.5);
-      final double lineOpacity = (pulse * 0.18 * progress).clamp(0.0, 0.18);
+      final double pulse = (sin((progress * 6.283 * 3) + i * 2.1) * 0.5 + 0.5);
+      final double lineOpacity = (pulse * 0.3 * progress).clamp(0.0, 0.3);
 
       if (lineOpacity < 0.003) continue;
 
@@ -157,7 +157,7 @@ class _FutureTechPainter extends CustomPainter {
       final Paint glowPaint = Paint()
         ..color = neonBlue.withValues(alpha: lineOpacity * 0.5)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10)
-        ..strokeWidth = 3;
+        ..strokeWidth = 5;
       canvas.drawLine(
         Offset(lineX, ly),
         Offset(lineX + lineWidth, ly),
@@ -167,7 +167,7 @@ class _FutureTechPainter extends CustomPainter {
       // Core line
       final Paint linePaint = Paint()
         ..color = neonBlue.withValues(alpha: lineOpacity)
-        ..strokeWidth = 1.0;
+        ..strokeWidth = 1.5;
       canvas.drawLine(
         Offset(lineX, ly),
         Offset(lineX + lineWidth, ly),
@@ -225,8 +225,8 @@ class _DataStreamPainter extends CustomPainter {
     final Paint paint = Paint();
     final Random r = Random(77);
 
-    for (int col = 0; col < 15; col++) {
-      final double x = (col / 15) * size.width + r.nextDouble() * 20;
+    for (int col = 0; col < 20; col++) {
+      final double x = (col / 20) * size.width + r.nextDouble() * 20;
       final double speed = 0.5 + r.nextDouble() * 1.5;
 
       for (int dot = 0; dot < 20; dot++) {
@@ -234,7 +234,7 @@ class _DataStreamPainter extends CustomPainter {
         final double y = baseY - ((time * speed * 30) % size.height);
         final double wrappedY = y < 0 ? y + size.height : y;
 
-        final double dotSize = 1 + r.nextDouble() * 2;
+        final double dotSize = 1.5 + r.nextDouble() * 3;
         final bool isDash = r.nextDouble() > 0.6;
 
         paint.color = AppColors.futureGlow

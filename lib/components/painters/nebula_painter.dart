@@ -23,9 +23,9 @@ class NebulaPainter extends CustomPainter {
 
       // Ambient drift: slight sinusoidal position shift independent of scroll
       final double ambientDriftX =
-          sin(time * 0.3 + i * 1.7) * size.width * 0.008;
+          sin(time * 0.6 + i * 1.7) * size.width * 0.008;
       final double ambientDriftY =
-          cos(time * 0.25 + i * 2.3) * size.height * 0.005;
+          cos(time * 0.5 + i * 2.3) * size.height * 0.005;
 
       final Offset center = Offset(
         cloud.x * size.width + drift + ambientDriftX + cursorX * 20.0 * cloud.driftSpeed,
@@ -37,7 +37,7 @@ class NebulaPainter extends CustomPainter {
 
       // Subtle color shift over time: lerp toward a slightly shifted hue
       final HSLColor hsl = HSLColor.fromColor(cloud.color);
-      final double hueShift = sin(time * 0.15 + i * 1.1) * 8.0;
+      final double hueShift = sin(time * 0.35 + i * 1.1) * 8.0;
       final HSLColor shifted = hsl.withHue((hsl.hue + hueShift) % 360);
       final Color animatedColor = shifted.toColor();
 

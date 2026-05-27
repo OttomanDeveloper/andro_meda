@@ -29,7 +29,7 @@ class BigBangEra extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: RadialGradient(
                           center: Alignment.center,
-                          radius: 0.1 + progress * 1.5,
+                          radius: 0.05 + progress * 2.5,
                           colors: [
                             AppColors.bigBangCenter.withValues(
                                 alpha: (1.0 - progress).clamp(0.0, 0.9)),
@@ -61,8 +61,8 @@ class BigBangEra extends StatelessWidget {
                                     : (0.8 - (progress - 0.2) * 1.0)
                                         .clamp(0.0, 0.8),
                               ),
-                              blurRadius: 100 + progress * 200,
-                              spreadRadius: progress * 50,
+                              blurRadius: 200 + progress * 400,
+                              spreadRadius: progress * 100,
                             ),
                           ],
                         ),
@@ -151,7 +151,7 @@ class BigBangEra extends StatelessWidget {
       (int i) {
         final Random r = Random(i);
         final double angle = r.nextDouble() * pi * 2;
-        final double speed = 0.1 + r.nextDouble() * 0.4;
+        final double speed = 0.2 + r.nextDouble() * 0.8;
         return Particle(
           startX: 0.5,
           startY: 0.4,
@@ -162,7 +162,7 @@ class BigBangEra extends StatelessWidget {
             AppColors.bigBangOuter,
             r.nextDouble(),
           )!,
-          size: 1.0 + r.nextDouble() * 2.5,
+          size: 1.5 + r.nextDouble() * 3.5,
           birthProgress: r.nextDouble() * 0.3,
         );
       },
@@ -189,7 +189,7 @@ class _ShockwavePainter extends CustomPainter {
           ((progress - 0.02 - ringDelay) / 0.3).clamp(0.0, 1.0);
       if (ringProgress <= 0) continue;
 
-      final double radius = ringProgress * size.width * 0.5;
+      final double radius = ringProgress * size.width * 0.7;
       final double opacity = ((1.0 - ringProgress) * 0.6).clamp(0.0, 0.6);
 
       paint.color = AppColors.bigBangMid.withValues(alpha: opacity);

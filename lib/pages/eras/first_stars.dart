@@ -5,6 +5,15 @@ class FirstStarsEra extends StatelessWidget {
 
   static const int eraIndex = 2;
 
+  // Hero stars: [x, y, size, appearAtProgress]
+  static const List<List<double>> _heroStars = [
+    [0.15, 0.2, 8.0, 0.1],
+    [0.5, 0.15, 10.0, 0.15],
+    [0.8, 0.25, 7.0, 0.2],
+    [0.35, 0.65, 9.0, 0.25],
+    [0.7, 0.55, 8.0, 0.3],
+  ];
+
   static const List<List<List<double>>> _constellations = [
     // Triangle
     [[0.2, 0.25], [0.28, 0.15], [0.35, 0.28]],
@@ -16,7 +25,7 @@ class FirstStarsEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int starCount = AppSettings.particleCount(context, desktop: 150);
+    final int starCount = AppSettings.particleCount(context, desktop: 200);
 
     return Consumer<CursorProvider>(
       builder: (_, CursorProvider cursor, _) {
@@ -69,6 +78,50 @@ class FirstStarsEra extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // Hero stars — large blooming stars
+                      for (int i = 0; i < _heroStars.length; i++)
+                        Builder(
+                          builder: (_) {
+                            final List<double> star = _heroStars[i];
+                            final double starOpacity =
+                                ((progress - star[3]) / 0.15).clamp(0.0, 1.0);
+                            if (starOpacity <= 0) return const SizedBox.shrink();
+                            final Size screenSize = MediaQuery.sizeOf(context);
+                            return Positioned(
+                              left: star[0] * screenSize.width - star[2] * 3,
+                              top: star[1] * screenSize.height *
+                                      AppSettings.eraHeightFactor -
+                                  star[2] * 3,
+                              child: Opacity(
+                                opacity: starOpacity,
+                                child: Container(
+                                  width: star[2] * 6,
+                                  height: star[2] * 6,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color(0xffc8dcff)
+                                        .withValues(alpha: starOpacity * 0.9),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xffc8dcff)
+                                            .withValues(
+                                                alpha: starOpacity * 0.6),
+                                        blurRadius: 40 * starOpacity,
+                                        spreadRadius: 10 * starOpacity,
+                                      ),
+                                      BoxShadow(
+                                        color: AppColors.white.withValues(
+                                            alpha: starOpacity * 0.3),
+                                        blurRadius: 60 * starOpacity,
+                                        spreadRadius: 20 * starOpacity,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       Positioned.fill(
                         child: StarIgniter(eraProgress: progress),
                       ),
@@ -103,17 +156,17 @@ class _ConstellationPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (progress < 0.3) return;
-    final double lineOpacity = ((progress - 0.3) / 0.4).clamp(0.0, 0.45);
+    final double lineOpacity = ((progress - 0.3) / 0.25).clamp(0.0, 0.65);
     final Paint linePaint = Paint()
       ..color = const Color(0xffc8dcff).withValues(alpha: lineOpacity)
-      ..strokeWidth = 0.8
+      ..strokeWidth = 1.2
       ..style = PaintingStyle.stroke
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
 
     for (final List<List<double>> constellation in FirstStarsEra._constellations) {
       final Path path = Path();
       for (int i = 0; i < constellation.length; i++) {
-        final double drawProgress = ((progress - 0.3 - i * 0.05) / 0.3).clamp(0.0, 1.0);
+        final double drawProgress = ((progress - 0.3 - i * 0.03) / 0.2).clamp(0.0, 1.0);
         if (drawProgress <= 0) break;
 
         final double cx = constellation[i][0] * size.width;

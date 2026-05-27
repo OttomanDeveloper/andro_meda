@@ -96,16 +96,16 @@ class LifeBeginsEra extends StatelessWidget {
   }
 
   static final List<Particle> _cellParticles = List<Particle>.generate(
-    30,
+    45,
     (int i) {
       final Random r = Random(i + 500);
       return Particle(
         startX: 0.2 + r.nextDouble() * 0.6,
         startY: 0.2 + r.nextDouble() * 0.6,
-        velocityX: (r.nextDouble() - 0.5) * 0.05,
-        velocityY: (r.nextDouble() - 0.5) * 0.05,
+        velocityX: (r.nextDouble() - 0.5) * 0.12,
+        velocityY: (r.nextDouble() - 0.5) * 0.12,
         color: i.isEven ? AppColors.lifeGreen : AppColors.lifeTeal,
-        size: 2.0 + r.nextDouble() * 4.0,
+        size: 4.0 + r.nextDouble() * 8.0,
         opacity: 0.15 + r.nextDouble() * 0.2,
         birthProgress: r.nextDouble() * 0.4,
       );
@@ -132,10 +132,10 @@ class _DNAHelixPainter extends CustomPainter {
       ..color = AppColors.lifeTeal.withValues(alpha: helixOpacity * 0.8)
       ..strokeWidth = 0.8;
 
-    final double centerX = size.width * 0.75;
+    final double centerX = size.width * 0.7;
     final double startY = size.height * 0.15;
     final double endY = size.height * 0.85;
-    final double amplitude = size.width * 0.04;
+    final double amplitude = size.width * 0.06;
     const int points = 60;
 
     final Path strand1 = Path();
@@ -144,7 +144,7 @@ class _DNAHelixPainter extends CustomPainter {
     for (int i = 0; i <= points; i++) {
       final double t = i / points;
       final double y = startY + (endY - startY) * t;
-      final double phase = t * pi * 6 + time * 0.8;
+      final double phase = t * pi * 6 + time * 1.5;
 
       final double x1 = centerX + sin(phase) * amplitude;
       final double x2 = centerX - sin(phase) * amplitude;
@@ -157,8 +157,8 @@ class _DNAHelixPainter extends CustomPainter {
         strand2.lineTo(x2, y);
       }
 
-      // Rungs connecting the two strands every 5 points
-      if (i % 5 == 0 && i > 0) {
+      // Rungs connecting the two strands every 4 points
+      if (i % 4 == 0 && i > 0) {
         canvas.drawLine(Offset(x1, y), Offset(x2, y), rungPaint);
       }
     }

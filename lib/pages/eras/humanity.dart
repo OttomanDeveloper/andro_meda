@@ -132,13 +132,13 @@ class _FirePainter extends CustomPainter {
 
     // Draw multiple flame tongues with varying heights
     const List<_FlameTongue> tongues = [
-      _FlameTongue(offsetX: -0.02, width: 0.025, height: 0.5, hue: 0),
-      _FlameTongue(offsetX: 0.0, width: 0.03, height: 0.7, hue: 1),
-      _FlameTongue(offsetX: 0.015, width: 0.02, height: 0.55, hue: 0),
-      _FlameTongue(offsetX: -0.01, width: 0.022, height: 0.65, hue: 1),
-      _FlameTongue(offsetX: 0.008, width: 0.018, height: 0.45, hue: 2),
-      _FlameTongue(offsetX: -0.018, width: 0.015, height: 0.35, hue: 2),
-      _FlameTongue(offsetX: 0.022, width: 0.012, height: 0.3, hue: 0),
+      _FlameTongue(offsetX: -0.02, width: 0.025, height: 0.75, hue: 0),
+      _FlameTongue(offsetX: 0.0, width: 0.03, height: 1.05, hue: 1),
+      _FlameTongue(offsetX: 0.015, width: 0.02, height: 0.825, hue: 0),
+      _FlameTongue(offsetX: -0.01, width: 0.022, height: 0.975, hue: 1),
+      _FlameTongue(offsetX: 0.008, width: 0.018, height: 0.675, hue: 2),
+      _FlameTongue(offsetX: -0.018, width: 0.015, height: 0.525, hue: 2),
+      _FlameTongue(offsetX: 0.022, width: 0.012, height: 0.45, hue: 0),
     ];
 
     for (int i = 0; i < tongues.length; i++) {
@@ -187,7 +187,7 @@ class _FirePainter extends CustomPainter {
     }
 
     // Ember particles rising from fire
-    const int emberCount = 12;
+    const int emberCount = 18;
     for (int i = 0; i < emberCount; i++) {
       final double seed = (i * 137.508 + progress * 200) % 100 / 100;
       final double emberX = cx + w * 0.06 * (seed - 0.5) * 2;
@@ -292,11 +292,11 @@ class _SkylinePainter extends CustomPainter {
       ..color = AppColors.humanityWarm.withValues(alpha: 0.6 * buildProgress);
 
     final Random r = Random(42);
-    const int buildingCount = 20;
+    const int buildingCount = 25;
     final double buildingWidth = size.width / buildingCount;
 
     for (int i = 0; i < buildingCount; i++) {
-      final double maxHeight = (30 + r.nextDouble() * 80) * buildProgress;
+      final double maxHeight = (50 + r.nextDouble() * 130) * buildProgress;
       final double x = i * buildingWidth + r.nextDouble() * 5;
       final double w = buildingWidth * (0.5 + r.nextDouble() * 0.4);
 
@@ -314,7 +314,7 @@ class _SkylinePainter extends CustomPainter {
               final double wx = x + 3 + wi * 8;
               final double wy = groundY - maxHeight + 4 + f * 12;
               canvas.drawRect(
-                Rect.fromLTWH(wx, wy, 3, 4),
+                Rect.fromLTWH(wx, wy, 4, 5),
                 windowPaint,
               );
             }

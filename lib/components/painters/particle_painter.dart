@@ -21,8 +21,8 @@ class ParticlePainter extends CustomPainter {
       if (life <= 0.0) continue;
 
       // Ambient sinusoidal drift independent of scroll
-      final double ambientX = sin(time * 0.5 + i * 1.3) * size.width * 0.003;
-      final double ambientY = cos(time * 0.4 + i * 0.9) * size.height * 0.003;
+      final double ambientX = sin(time * 1.0 + i * 1.3) * size.width * 0.003;
+      final double ambientY = cos(time * 0.8 + i * 0.9) * size.height * 0.003;
 
       final double x =
           size.width * p.startX + (p.velocityX * size.width * life) + ambientX;

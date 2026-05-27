@@ -76,7 +76,7 @@ class EraWrapper extends StatelessWidget {
   double _entranceOffset(double progress, double viewportHeight) {
     if (progress < 0.15) {
       final double t = progress / 0.15;
-      return viewportHeight * 0.05 * (1.0 - Curves.easeOutCubic.transform(t));
+      return viewportHeight * 0.12 * (1.0 - Curves.easeOutCubic.transform(t));
     }
     if (progress > 0.75) {
       final double t = (progress - 0.75) / 0.25;
@@ -88,7 +88,7 @@ class EraWrapper extends StatelessWidget {
   double _entranceScale(double progress) {
     if (progress < 0.15) {
       final double t = progress / 0.15;
-      return 0.92 + 0.08 * Curves.easeOutCubic.transform(t);
+      return 0.85 + 0.15 * Curves.easeOutCubic.transform(t);
     }
     return 1.0;
   }
@@ -156,7 +156,7 @@ class _EraTextContent extends StatelessWidget {
             text: AppText.eraHeadlines[eraIndex],
             style: GoogleFonts.russoOne(
               color: headlineColor,
-              fontSize: size.height * 0.055 * scaleFactor,
+              fontSize: size.height * 0.065 * scaleFactor,
               letterSpacing: 3,
               shadows: [
                 Shadow(
@@ -245,7 +245,7 @@ class _AnimatedHeadline extends StatelessWidget {
         final double delay = i / text.length;
         final double charOpacity =
             ((charProgress - delay * 0.5) / 0.5).clamp(0.0, 1.0);
-        final double charOffset = (1.0 - charOpacity) * 8;
+        final double charOffset = (1.0 - charOpacity) * 15;
 
         return Transform.translate(
           offset: Offset(0, charOffset),
