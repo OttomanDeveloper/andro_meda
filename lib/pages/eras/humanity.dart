@@ -55,21 +55,21 @@ class HumanityEra extends StatelessWidget {
                                   y: 0.6,
                                   radius: 0.25,
                                   color: AppColors.humanityFire,
-                                  opacity: 0.4,
+                                  opacity: 0.7,
                                   driftSpeed: 0.0),
                               NebulaCloud(
                                   x: 0.5,
                                   y: 0.55,
                                   radius: 0.35,
                                   color: AppColors.humanityWarm,
-                                  opacity: 0.2,
+                                  opacity: 0.4,
                                   driftSpeed: 0.0),
                               NebulaCloud(
                                   x: 0.48,
                                   y: 0.65,
                                   radius: 0.15,
                                   color: AppColors.humanityFire,
-                                  opacity: 0.35,
+                                  opacity: 0.6,
                                   driftSpeed: 0.0),
                             ],
                           ),
@@ -289,7 +289,7 @@ class _SkylinePainter extends CustomPainter {
     final Paint buildingPaint = Paint()
       ..color = AppColors.humanityBg.withValues(alpha: 0.7);
     final Paint windowPaint = Paint()
-      ..color = AppColors.humanityWarm.withValues(alpha: 0.4 * buildProgress);
+      ..color = AppColors.humanityWarm.withValues(alpha: 0.6 * buildProgress);
 
     final Random r = Random(42);
     const int buildingCount = 20;

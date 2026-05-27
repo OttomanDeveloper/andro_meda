@@ -64,12 +64,12 @@ class StarFieldPainter extends CustomPainter {
       final Color color = _starColor(i);
 
       // 1. Outer glow (6x radius, very soft)
-      paint.color = color.withValues(alpha: opacity * 0.08);
+      paint.color = color.withValues(alpha: opacity * 0.18);
       paint.maskFilter = MaskFilter.blur(BlurStyle.normal, starSize * 4);
       canvas.drawCircle(Offset(finalX, finalY), starSize * 6, paint);
 
       // 2. Mid glow (3x radius)
-      paint.color = color.withValues(alpha: opacity * 0.2);
+      paint.color = color.withValues(alpha: opacity * 0.4);
       paint.maskFilter = MaskFilter.blur(BlurStyle.normal, starSize * 2);
       canvas.drawCircle(Offset(finalX, finalY), starSize * 3, paint);
 
@@ -85,8 +85,8 @@ class StarFieldPainter extends CustomPainter {
       // 4. Cross spikes for large bright stars
       if (starSize > 1.8) {
         final double spikeLength = starSize * 5;
-        paint.color = color.withValues(alpha: opacity * 0.25);
-        paint.strokeWidth = 0.5;
+        paint.color = color.withValues(alpha: opacity * 0.5);
+        paint.strokeWidth = 1.5;
         paint.style = PaintingStyle.stroke;
         // Horizontal spike
         canvas.drawLine(

@@ -32,7 +32,7 @@ class BigBangEra extends StatelessWidget {
                           radius: 0.1 + progress * 1.5,
                           colors: [
                             AppColors.bigBangCenter.withValues(
-                                alpha: (1.0 - progress).clamp(0.0, 0.8)),
+                                alpha: (1.0 - progress).clamp(0.0, 0.9)),
                             AppColors.bigBangMid.withValues(
                                 alpha:
                                     (0.6 - progress * 0.6).clamp(0.0, 0.6)),
@@ -190,7 +190,7 @@ class _ShockwavePainter extends CustomPainter {
       if (ringProgress <= 0) continue;
 
       final double radius = ringProgress * size.width * 0.5;
-      final double opacity = ((1.0 - ringProgress) * 0.4).clamp(0.0, 0.4);
+      final double opacity = ((1.0 - ringProgress) * 0.6).clamp(0.0, 0.6);
 
       paint.color = AppColors.bigBangMid.withValues(alpha: opacity);
       paint.maskFilter =

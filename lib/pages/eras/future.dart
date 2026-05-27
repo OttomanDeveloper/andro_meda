@@ -108,8 +108,8 @@ class _FutureTechPainter extends CustomPainter {
 
   void _drawGrid(Canvas canvas, double w, double h) {
     // Subtle grid pattern that fades in as background lightens
-    final double gridOpacity = (lightProgress * 0.05).clamp(0.0, 0.05);
-    if (gridOpacity < 0.005) return;
+    final double gridOpacity = (lightProgress * 0.075).clamp(0.0, 0.075);
+    if (gridOpacity < 0.003) return;
 
     final bool isDark = lightProgress < 0.5;
     final Color gridColor = isDark
@@ -145,9 +145,9 @@ class _FutureTechPainter extends CustomPainter {
     for (int i = 0; i < lineYs.length; i++) {
       // Pulse effect: each line pulses at a different phase
       final double pulse = (sin((progress * 6.283 * 2) + i * 2.1) * 0.5 + 0.5);
-      final double lineOpacity = (pulse * 0.12 * progress).clamp(0.0, 0.12);
+      final double lineOpacity = (pulse * 0.18 * progress).clamp(0.0, 0.18);
 
-      if (lineOpacity < 0.005) continue;
+      if (lineOpacity < 0.003) continue;
 
       final double ly = h * lineYs[i];
       final double lineWidth = w * (0.3 + 0.2 * pulse);
@@ -187,7 +187,7 @@ class _FutureTechPainter extends CustomPainter {
       final double rawY = ((seed * 5 + progress * 1.5 + i * 0.17) % 1.0);
       final double py = h * (1.0 - rawY); // drift upward
 
-      final double particleAlpha = (1.0 - rawY) * progress * 0.3;
+      final double particleAlpha = (1.0 - rawY) * progress * 0.45;
       if (particleAlpha < 0.01) continue;
 
       final bool isDark = lightProgress < 0.5;
@@ -221,7 +221,7 @@ class _DataStreamPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (progress < 0.1) return;
-    final double streamOpacity = ((progress - 0.1) / 0.4).clamp(0.0, 0.15);
+    final double streamOpacity = ((progress - 0.1) / 0.4).clamp(0.0, 0.225);
     final Paint paint = Paint();
     final Random r = Random(77);
 

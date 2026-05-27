@@ -54,7 +54,7 @@ class ParticlePainter extends CustomPainter {
         final double ty = size.height * p.startY +
             (p.velocityY * size.height * trailLife) +
             ambientY;
-        final double trailOpacity = opacity * (0.15 / t);
+        final double trailOpacity = opacity * (0.3 / t);
         final double trailSize = currentSize * (1.0 - t * 0.2);
         if (trailSize <= 0) continue;
         paint.color = p.color.withValues(alpha: trailOpacity);
@@ -63,7 +63,7 @@ class ParticlePainter extends CustomPainter {
       }
 
       // Glow halo (2x radius)
-      paint.color = p.color.withValues(alpha: opacity * 0.3);
+      paint.color = p.color.withValues(alpha: opacity * 0.5);
       paint.maskFilter = MaskFilter.blur(BlurStyle.normal, currentSize);
       canvas.drawCircle(Offset(x, y), currentSize * 2, paint);
 

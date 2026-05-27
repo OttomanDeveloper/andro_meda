@@ -51,7 +51,7 @@ class NebulaPainter extends CustomPainter {
         width: w * 1.4,
         height: h * 1.4,
         color: animatedColor,
-        opacity: baseOpacity * 0.15,
+        opacity: baseOpacity * 0.25,
         blurSigma: 40,
       );
 
@@ -62,7 +62,7 @@ class NebulaPainter extends CustomPainter {
         width: w * 1.15,
         height: h * 1.15,
         color: animatedColor,
-        opacity: baseOpacity * 0.4,
+        opacity: baseOpacity * 0.6,
         blurSigma: 25,
       );
 

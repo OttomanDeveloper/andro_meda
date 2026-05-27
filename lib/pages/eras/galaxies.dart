@@ -11,28 +11,28 @@ class GalaxiesEra extends StatelessWidget {
         y: 0.4,
         radius: 0.25,
         color: AppColors.galaxiesArm,
-        opacity: 0.2,
+        opacity: 0.35,
         driftSpeed: 0.03),
     NebulaCloud(
         x: 0.45,
         y: 0.45,
         radius: 0.18,
         color: AppColors.galaxiesCore,
-        opacity: 0.15,
+        opacity: 0.27,
         driftSpeed: -0.02),
     NebulaCloud(
         x: 0.55,
         y: 0.35,
         radius: 0.2,
         color: AppColors.galaxiesArm,
-        opacity: 0.12,
+        opacity: 0.22,
         driftSpeed: 0.025),
     NebulaCloud(
         x: 0.4,
         y: 0.5,
         radius: 0.15,
         color: AppColors.galaxiesDeep,
-        opacity: 0.1,
+        opacity: 0.18,
         driftSpeed: -0.01),
   ];
 
@@ -141,7 +141,7 @@ class _StarBirthPainter extends CustomPainter {
         final double rayAngle = (ray / 6) * pi * 2;
         final double rayLength = burstPhase * 15;
         final double alpha =
-            ((1.0 - burstPhase) * 0.5 * progress).clamp(0.0, 0.5);
+            ((1.0 - burstPhase) * 0.8 * progress).clamp(0.0, 0.8);
 
         paint.color = AppColors.firstStarsBright.withValues(alpha: alpha);
         paint.strokeWidth = 1;
@@ -162,7 +162,7 @@ class _StarBirthPainter extends CustomPainter {
       paint.style = PaintingStyle.fill;
       paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       paint.color = AppColors.firstStarsBright.withValues(
-          alpha: ((1.0 - burstPhase) * 0.6 * progress).clamp(0.0, 0.6));
+          alpha: ((1.0 - burstPhase) * 0.9 * progress).clamp(0.0, 0.9));
       canvas.drawCircle(burstCenter, 3 * (1.0 - burstPhase), paint);
       paint.maskFilter = null;
     }

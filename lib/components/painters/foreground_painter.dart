@@ -4,7 +4,7 @@ class ForegroundPainter extends CustomPainter {
   const ForegroundPainter({
     required this.time,
     required this.color,
-    this.particleCount = 8,
+    this.particleCount = 15,
     this.seed = 99,
     this.cursorX = 0.0,
     this.cursorY = 0.0,
@@ -37,9 +37,9 @@ class ForegroundPainter extends CustomPainter {
           cursorY * -15.0;
 
       paint.color =
-          color.withValues(alpha: 0.04 + 0.02 * sin(time + i.toDouble()));
+          color.withValues(alpha: 0.15 + 0.08 * sin(time + i.toDouble()));
       paint.maskFilter =
-          MaskFilter.blur(BlurStyle.normal, particleSize * 0.6);
+          MaskFilter.blur(BlurStyle.normal, particleSize * 0.5);
 
       canvas.drawCircle(Offset(x, y), particleSize, paint);
     }

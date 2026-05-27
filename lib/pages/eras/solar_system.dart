@@ -88,7 +88,7 @@ class SolarSystemEra extends StatelessWidget {
                             progress: progress,
                             orbits: _orbits,
                             centerColor: AppColors.solarSun,
-                            centerRadius: 22,
+                            centerRadius: 28,
                             time: anim.time,
                           ),
                         ),

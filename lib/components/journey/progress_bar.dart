@@ -59,7 +59,7 @@ class ProgressBar extends StatelessWidget {
                 },
                 child: Container(
                   width: size.width,
-                  height: size.height * (isMobile ? 0.003 : 0.004),
+                  height: size.height * (isMobile ? 0.004 : 0.005),
                   decoration: BoxDecoration(
                     color: AppColors.progressBg,
                     borderRadius: BorderRadius.circular(2),
@@ -74,8 +74,8 @@ class ProgressBar extends StatelessWidget {
                         boxShadow: [
                           BoxShadow(
                             color:
-                                AppColors.progressFill.withValues(alpha: 0.5),
-                            blurRadius: 6,
+                                AppColors.progressFill.withValues(alpha: 0.7),
+                            blurRadius: 10,
                             spreadRadius: 1,
                           ),
                         ],

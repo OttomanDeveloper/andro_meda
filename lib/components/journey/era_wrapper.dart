@@ -145,7 +145,7 @@ class _EraTextContent extends StatelessWidget {
               letterSpacing: 6,
               shadows: [
                 Shadow(
-                  color: timestampColor.withValues(alpha: 0.5),
+                  color: timestampColor.withValues(alpha: 0.7),
                   blurRadius: 10,
                 ),
               ],
@@ -160,12 +160,12 @@ class _EraTextContent extends StatelessWidget {
               letterSpacing: 3,
               shadows: [
                 Shadow(
-                  color: headlineColor.withValues(alpha: 0.6),
-                  blurRadius: 20,
+                  color: headlineColor.withValues(alpha: 0.8),
+                  blurRadius: 30,
                 ),
                 Shadow(
-                  color: headlineColor.withValues(alpha: 0.3),
-                  blurRadius: 40,
+                  color: headlineColor.withValues(alpha: 0.5),
+                  blurRadius: 60,
                 ),
               ],
             ),
@@ -179,7 +179,7 @@ class _EraTextContent extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   AppColors.parent,
-                  headlineColor.withValues(alpha: 0.4),
+                  headlineColor.withValues(alpha: 0.6),
                   AppColors.parent,
                 ],
               ),

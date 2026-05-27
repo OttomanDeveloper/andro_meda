@@ -11,21 +11,21 @@ class LifeBeginsEra extends StatelessWidget {
         y: 0.5,
         radius: 0.2,
         color: AppColors.lifeGreen,
-        opacity: 0.12,
+        opacity: 0.24,
         driftSpeed: 0.02),
     NebulaCloud(
         x: 0.6,
         y: 0.4,
         radius: 0.15,
         color: AppColors.lifeTeal,
-        opacity: 0.1,
+        opacity: 0.2,
         driftSpeed: -0.015),
     NebulaCloud(
         x: 0.7,
         y: 0.6,
         radius: 0.18,
         color: AppColors.lifeGreen,
-        opacity: 0.08,
+        opacity: 0.18,
         driftSpeed: 0.01),
   ];
 
@@ -121,7 +121,7 @@ class _DNAHelixPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (progress < 0.2) return;
-    final double helixOpacity = ((progress - 0.2) / 0.3).clamp(0.0, 0.2);
+    final double helixOpacity = ((progress - 0.2) / 0.3).clamp(0.0, 0.4);
     final Paint strandPaint = Paint()
       ..color = AppColors.lifeGreen.withValues(alpha: helixOpacity)
       ..strokeWidth = 1.5
@@ -129,7 +129,7 @@ class _DNAHelixPainter extends CustomPainter {
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1);
 
     final Paint rungPaint = Paint()
-      ..color = AppColors.lifeTeal.withValues(alpha: helixOpacity * 0.6)
+      ..color = AppColors.lifeTeal.withValues(alpha: helixOpacity * 0.8)
       ..strokeWidth = 0.8;
 
     final double centerX = size.width * 0.75;

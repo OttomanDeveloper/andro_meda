@@ -11,21 +11,21 @@ class DarkAgesEra extends StatelessWidget {
         y: 0.4,
         radius: 0.15,
         color: AppColors.darkAgesHydrogen,
-        opacity: 0.08,
+        opacity: 0.18,
         driftSpeed: 0.02),
     NebulaCloud(
         x: 0.6,
         y: 0.6,
         radius: 0.12,
         color: AppColors.darkAgesWisp,
-        opacity: 0.05,
+        opacity: 0.14,
         driftSpeed: -0.015),
     NebulaCloud(
         x: 0.8,
         y: 0.3,
         radius: 0.1,
         color: AppColors.darkAgesHydrogen,
-        opacity: 0.06,
+        opacity: 0.16,
         driftSpeed: 0.01),
   ];
 

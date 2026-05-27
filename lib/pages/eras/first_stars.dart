@@ -103,7 +103,7 @@ class _ConstellationPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (progress < 0.3) return;
-    final double lineOpacity = ((progress - 0.3) / 0.4).clamp(0.0, 0.25);
+    final double lineOpacity = ((progress - 0.3) / 0.4).clamp(0.0, 0.45);
     final Paint linePaint = Paint()
       ..color = const Color(0xffc8dcff).withValues(alpha: lineOpacity)
       ..strokeWidth = 0.8
@@ -133,7 +133,7 @@ class _ConstellationPainter extends CustomPainter {
         canvas.drawCircle(
           Offset(cx, cy),
           2.5,
-          Paint()..color = const Color(0xffc8dcff).withValues(alpha: lineOpacity * 2),
+          Paint()..color = const Color(0xffc8dcff).withValues(alpha: lineOpacity * 3),
         );
       }
       canvas.drawPath(path, linePaint);

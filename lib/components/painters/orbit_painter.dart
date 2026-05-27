@@ -22,19 +22,19 @@ class OrbitPainter extends CustomPainter {
     // Sun: multi-layer glow
     // Outermost glow (8x radius)
     final Paint outerGlowPaint = Paint()
-      ..color = centerColor.withValues(alpha: 0.06)
+      ..color = centerColor.withValues(alpha: 0.15)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 60);
     canvas.drawCircle(center, centerRadius * 8, outerGlowPaint);
 
     // Mid glow (5x radius)
     final Paint midGlowPaint = Paint()
-      ..color = centerColor.withValues(alpha: 0.12)
+      ..color = centerColor.withValues(alpha: 0.28)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 40);
     canvas.drawCircle(center, centerRadius * 5, midGlowPaint);
 
     // Inner glow (3x radius)
     final Paint innerGlowPaint = Paint()
-      ..color = centerColor.withValues(alpha: 0.2)
+      ..color = centerColor.withValues(alpha: 0.4)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 30);
     canvas.drawCircle(center, centerRadius * 3, innerGlowPaint);
 
@@ -44,7 +44,7 @@ class OrbitPainter extends CustomPainter {
 
     // Lens flare horizontal
     final Paint flarePaint = Paint()
-      ..color = centerColor.withValues(alpha: 0.15)
+      ..color = centerColor.withValues(alpha: 0.3)
       ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
@@ -62,7 +62,7 @@ class OrbitPainter extends CustomPainter {
 
     // Atmospheric glow
     final Paint atmoGlowPaint = Paint()
-      ..color = centerColor.withValues(alpha: 0.03)
+      ..color = centerColor.withValues(alpha: 0.1)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 80);
     canvas.drawCircle(center, centerRadius * 12, atmoGlowPaint);
 
@@ -82,7 +82,7 @@ class OrbitPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
         ..color =
-            AppColors.white.withValues(alpha: 0.13 * localProgress);
+            AppColors.white.withValues(alpha: 0.25 * localProgress);
 
       canvas.drawArc(
         Rect.fromCenter(
@@ -124,7 +124,7 @@ class OrbitPainter extends CustomPainter {
 
       // Planet glow halo
       final Paint planetGlowPaint = Paint()
-        ..color = orbit.planetColor.withValues(alpha: 0.25 * localProgress)
+        ..color = orbit.planetColor.withValues(alpha: 0.3 * localProgress)
         ..maskFilter =
             MaskFilter.blur(BlurStyle.normal, orbit.planetSize * 1.5);
       canvas.drawCircle(

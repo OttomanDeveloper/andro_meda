@@ -11,21 +11,21 @@ class AgeOfGiantsEra extends StatelessWidget {
         y: 0.7,
         radius: 0.3,
         color: AppColors.giantsForest,
-        opacity: 0.2,
+        opacity: 0.32,
         driftSpeed: 0.01),
     NebulaCloud(
         x: 0.7,
         y: 0.6,
         radius: 0.25,
         color: AppColors.giantsLeaf,
-        opacity: 0.1,
+        opacity: 0.2,
         driftSpeed: -0.008),
     NebulaCloud(
         x: 0.5,
         y: 0.8,
         radius: 0.35,
         color: AppColors.giantsBg,
-        opacity: 0.15,
+        opacity: 0.28,
         driftSpeed: 0.005),
   ];
 
@@ -122,7 +122,7 @@ class _GroundFogPainter extends CustomPainter {
     // Multiple fog layers at slightly different heights
     for (int layer = 0; layer < 4; layer++) {
       final double layerY = fogTop + layer * size.height * 0.05;
-      final double layerOpacity = (0.08 + layer * 0.03) * fogProgress;
+      final double layerOpacity = (0.18 + layer * 0.05) * fogProgress;
       final double drift = sin(time * 0.2 + layer) * 30;
 
       paint.shader = LinearGradient(
