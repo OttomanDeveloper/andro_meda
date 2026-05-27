@@ -28,9 +28,9 @@ class HumanityEra extends StatelessWidget {
                           painter: StarFieldPainter(
                             progress: progress,
                             time: anim.time,
-                            starCount: 60,
+                            starCount: 80,
                             baseColor: AppColors.white,
-                            maxOpacity: 0.2,
+                            maxOpacity: 0.3,
                             seed: 789,
                             cursorX: cursor.normalizedX,
                             cursorY: cursor.normalizedY,
@@ -39,7 +39,11 @@ class HumanityEra extends StatelessWidget {
                       ),
                       Positioned.fill(
                         child: CustomPaint(
-                          painter: _HorizonPainter(progress: progress),
+                          painter: _HumanityScenePainter(
+                            progress: progress,
+                            time: anim.time,
+                            viewportHeight: size.height,
+                          ),
                         ),
                       ),
                       Positioned.fill(
@@ -51,44 +55,20 @@ class HumanityEra extends StatelessWidget {
                             cursorY: cursor.normalizedY,
                             clouds: const [
                               NebulaCloud(
-                                  x: 0.5,
-                                  y: 0.6,
-                                  radius: 0.25,
-                                  color: AppColors.humanityFire,
-                                  opacity: 0.7,
-                                  driftSpeed: 0.0),
+                                x: 0.5, y: 0.28,
+                                radius: 0.2,
+                                color: AppColors.humanityFire,
+                                opacity: 0.5,
+                                driftSpeed: 0.0,
+                              ),
                               NebulaCloud(
-                                  x: 0.5,
-                                  y: 0.55,
-                                  radius: 0.35,
-                                  color: AppColors.humanityWarm,
-                                  opacity: 0.4,
-                                  driftSpeed: 0.0),
-                              NebulaCloud(
-                                  x: 0.48,
-                                  y: 0.65,
-                                  radius: 0.15,
-                                  color: AppColors.humanityFire,
-                                  opacity: 0.6,
-                                  driftSpeed: 0.0),
+                                x: 0.5, y: 0.25,
+                                radius: 0.3,
+                                color: AppColors.humanityWarm,
+                                opacity: 0.3,
+                                driftSpeed: 0.0,
+                              ),
                             ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: size.height * 0.18,
-                        left: 0,
-                        right: 0,
-                        height: size.height * 0.25,
-                        child: CustomPaint(
-                          painter: _FirePainter(progress: progress),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: CustomPaint(
-                          painter: _SkylinePainter(
-                            progress: progress,
-                            time: anim.time,
                           ),
                         ),
                       ),
@@ -115,225 +95,197 @@ class HumanityEra extends StatelessWidget {
   }
 }
 
-class _FirePainter extends CustomPainter {
-  const _FirePainter({required this.progress});
-
-  final double progress;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final double w = size.width;
-    final double h = size.height;
-    final double cx = w * 0.5;
-    final double baseY = h * 0.85;
-    final double fireOpacity = progress.clamp(0.0, 1.0);
-
-    if (fireOpacity < 0.05) return;
-
-    // Draw multiple flame tongues with varying heights
-    const List<_FlameTongue> tongues = [
-      _FlameTongue(offsetX: -0.02, width: 0.025, height: 0.75, hue: 0),
-      _FlameTongue(offsetX: 0.0, width: 0.03, height: 1.05, hue: 1),
-      _FlameTongue(offsetX: 0.015, width: 0.02, height: 0.825, hue: 0),
-      _FlameTongue(offsetX: -0.01, width: 0.022, height: 0.975, hue: 1),
-      _FlameTongue(offsetX: 0.008, width: 0.018, height: 0.675, hue: 2),
-      _FlameTongue(offsetX: -0.018, width: 0.015, height: 0.525, hue: 2),
-      _FlameTongue(offsetX: 0.022, width: 0.012, height: 0.45, hue: 0),
-    ];
-
-    for (int i = 0; i < tongues.length; i++) {
-      final _FlameTongue t = tongues[i];
-      // Pseudo-random flickering based on progress and tongue index
-      final double flicker = _flickerValue(progress, i);
-      final double tongueHeight = t.height * (0.7 + 0.3 * flicker);
-
-      final double tx = cx + w * t.offsetX;
-      final double tw = w * t.width;
-      final double th = h * tongueHeight;
-
-      final Color flameColor = switch (t.hue) {
-        0 => AppColors.humanityFire,
-        1 => AppColors.humanityWarm,
-        _ => const Color(0xffffe0a0),
-      };
-
-      final Path flamePath = Path();
-      flamePath.moveTo(tx - tw, baseY);
-      flamePath.quadraticBezierTo(
-        tx - tw * 0.5,
-        baseY - th * 0.6,
-        tx,
-        baseY - th,
-      );
-      flamePath.quadraticBezierTo(
-        tx + tw * 0.5,
-        baseY - th * 0.6,
-        tx + tw,
-        baseY,
-      );
-      flamePath.close();
-
-      // Glow
-      final Paint glowPaint = Paint()
-        ..color = flameColor.withValues(alpha: fireOpacity * 0.3)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-      canvas.drawPath(flamePath, glowPaint);
-
-      // Fill
-      final Paint fillPaint = Paint()
-        ..color = flameColor.withValues(alpha: fireOpacity * 0.8)
-        ..style = PaintingStyle.fill;
-      canvas.drawPath(flamePath, fillPaint);
-    }
-
-    // Ember particles rising from fire
-    const int emberCount = 18;
-    for (int i = 0; i < emberCount; i++) {
-      final double seed = (i * 137.508 + progress * 200) % 100 / 100;
-      final double emberX = cx + w * 0.06 * (seed - 0.5) * 2;
-      final double emberY = baseY - h * 0.3 - h * 0.4 * ((seed * 3 + progress * 2 + i * 0.3) % 1.0);
-      final double emberAlpha = (1.0 - ((seed * 3 + progress * 2 + i * 0.3) % 1.0)) * fireOpacity;
-
-      if (emberAlpha > 0.05) {
-        final Paint emberPaint = Paint()
-          ..color = AppColors.humanityWarm.withValues(alpha: emberAlpha * 0.6);
-        canvas.drawCircle(Offset(emberX, emberY), 1.5, emberPaint);
-      }
-    }
-  }
-
-  double _flickerValue(double progress, int index) {
-    // Produces a 0..1 pseudo-flicker based on progress and index
-    final double v = (progress * 8.0 + index * 2.3) % 1.0;
-    return (v * 6.283).clamp(0.0, 6.283) == 0 ? 1.0 : (sin(v * 6.283) * 0.5 + 0.5);
-  }
-
-  @override
-  bool shouldRepaint(covariant _FirePainter oldDelegate) =>
-      progress != oldDelegate.progress;
-}
-
-class _HorizonPainter extends CustomPainter {
-  const _HorizonPainter({required this.progress});
-
-  final double progress;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final double w = size.width;
-    final double h = size.height;
-    final double horizonY = h * 0.7;
-    final double opacity = progress.clamp(0.0, 1.0);
-
-    if (opacity < 0.05) return;
-
-    // Subtle horizon line
-    final Paint linePaint = Paint()
-      ..color = AppColors.humanityDark.withValues(alpha: opacity * 0.4)
-      ..strokeWidth = 1.0;
-    canvas.drawLine(
-      Offset(w * 0.1, horizonY),
-      Offset(w * 0.9, horizonY),
-      linePaint,
-    );
-
-    // Distant campfires along horizon — small glowing dots
-    const List<double> campfirePositions = [0.15, 0.28, 0.42, 0.62, 0.75, 0.85];
-    for (final double px in campfirePositions) {
-      final double cx = w * px;
-      final double cy = horizonY - 2;
-
-      // Warm glow
-      final Paint glowPaint = Paint()
-        ..color = AppColors.humanityFire.withValues(alpha: opacity * 0.15)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-      canvas.drawCircle(Offset(cx, cy), 4, glowPaint);
-
-      // Bright dot
-      final Paint dotPaint = Paint()
-        ..color = AppColors.humanityWarm.withValues(alpha: opacity * 0.5);
-      canvas.drawCircle(Offset(cx, cy), 1.5, dotPaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _HorizonPainter oldDelegate) =>
-      progress != oldDelegate.progress;
-}
-
-class _FlameTongue {
-  const _FlameTongue({
-    required this.offsetX,
-    required this.width,
-    required this.height,
-    required this.hue,
+class _HumanityScenePainter extends CustomPainter {
+  const _HumanityScenePainter({
+    required this.progress,
+    required this.time,
+    required this.viewportHeight,
   });
 
-  final double offsetX;
-  final double width;
-  final double height;
-  final int hue;
-}
-
-class _SkylinePainter extends CustomPainter {
-  const _SkylinePainter({required this.progress, required this.time});
   final double progress;
   final double time;
+  final double viewportHeight;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (progress < 0.3) return;
-    final double buildProgress = ((progress - 0.3) / 0.5).clamp(0.0, 1.0);
-    final double groundY = size.height * 0.85;
+    final double w = size.width;
+    final double vp = viewportHeight;
+    final double opacity = progress.clamp(0.0, 1.0);
+    if (opacity < 0.02) return;
 
-    final Paint buildingPaint = Paint()
-      ..color = AppColors.humanityBg.withValues(alpha: 0.7);
-    final Paint windowPaint = Paint()
-      ..color = AppColors.humanityWarm.withValues(alpha: 0.6 * buildProgress);
+    final Paint paint = Paint();
 
-    final Random r = Random(42);
-    const int buildingCount = 25;
-    final double buildingWidth = size.width / buildingCount;
+    // Ground / horizon at 40% of first viewport
+    final double groundY = vp * 0.6;
 
-    for (int i = 0; i < buildingCount; i++) {
-      final double maxHeight = (50 + r.nextDouble() * 130) * buildProgress;
-      final double x = i * buildingWidth + r.nextDouble() * 5;
-      final double w = buildingWidth * (0.5 + r.nextDouble() * 0.4);
+    // Ground gradient below horizon
+    paint.shader = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        AppColors.humanityBg,
+        AppColors.humanityDark.withValues(alpha: 0.8),
+      ],
+    ).createShader(Rect.fromLTWH(0, groundY, w, vp * 0.5));
+    canvas.drawRect(Rect.fromLTWH(0, groundY, w, vp * 0.5), paint);
+    paint.shader = null;
 
-      // Building body
-      final Rect rect = Rect.fromLTWH(x, groundY - maxHeight, w, maxHeight);
-      canvas.drawRect(rect, buildingPaint);
+    // --- CENTRAL BONFIRE ---
+    final double cx = w * 0.5;
+    final double fireBaseY = groundY - vp * 0.01;
 
-      // Windows (small lit squares)
-      if (maxHeight > 20) {
-        final int floors = (maxHeight / 12).floor();
-        final int windowsPerFloor = (w / 8).floor();
-        for (int f = 0; f < floors; f++) {
-          for (int wi = 0; wi < windowsPerFloor; wi++) {
-            if (r.nextDouble() > 0.4) {
-              final double wx = x + 3 + wi * 8;
-              final double wy = groundY - maxHeight + 4 + f * 12;
-              canvas.drawRect(
-                Rect.fromLTWH(wx, wy, 4, 5),
-                windowPaint,
-              );
+    // Large warm glow behind fire
+    paint.color = AppColors.humanityFire.withValues(alpha: 0.25 * opacity);
+    paint.maskFilter = MaskFilter.blur(BlurStyle.normal, vp * 0.12);
+    canvas.drawCircle(Offset(cx, fireBaseY - vp * 0.05), vp * 0.08, paint);
+    paint.maskFilter = null;
+
+    // Flame tongues — much wider and taller
+    const List<_Flame> flames = [
+      _Flame(-0.03, 0.05, 0.20, AppColors.humanityFire),
+      _Flame(0.0, 0.06, 0.28, AppColors.humanityWarm),
+      _Flame(0.025, 0.04, 0.22, AppColors.humanityFire),
+      _Flame(-0.015, 0.045, 0.25, Color(0xffffe0a0)),
+      _Flame(0.035, 0.035, 0.16, AppColors.humanityWarm),
+      _Flame(-0.04, 0.03, 0.14, AppColors.humanityFire),
+    ];
+
+    for (int i = 0; i < flames.length; i++) {
+      final _Flame f = flames[i];
+      final double flicker = (sin(time * 4.0 + i * 1.7) * 0.15 + 0.85);
+      final double fh = vp * f.height * flicker * opacity;
+      final double fw = w * f.width;
+      final double fx = cx + w * f.offsetX;
+
+      final Path tongue = Path();
+      tongue.moveTo(fx - fw, fireBaseY);
+      tongue.quadraticBezierTo(fx - fw * 0.3, fireBaseY - fh * 0.7, fx, fireBaseY - fh);
+      tongue.quadraticBezierTo(fx + fw * 0.3, fireBaseY - fh * 0.7, fx + fw, fireBaseY);
+      tongue.close();
+
+      paint.color = f.color.withValues(alpha: 0.3 * opacity);
+      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
+      canvas.drawPath(tongue, paint);
+
+      paint.color = f.color.withValues(alpha: 0.85 * opacity);
+      paint.maskFilter = null;
+      canvas.drawPath(tongue, paint);
+    }
+
+    // Embers rising
+    for (int i = 0; i < 25; i++) {
+      final double phase = (time * 0.5 + i * 0.4) % 2.0;
+      if (phase > 1.0) continue;
+      final double ex = cx + (sin(i * 2.3) * w * 0.06);
+      final double ey = fireBaseY - vp * 0.05 - phase * vp * 0.25;
+      final double ea = ((1.0 - phase) * opacity * 0.7).clamp(0.0, 0.7);
+
+      paint.color = AppColors.humanityWarm.withValues(alpha: ea);
+      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+      canvas.drawCircle(Offset(ex, ey), 2, paint);
+      paint.maskFilter = null;
+    }
+
+    // Fire log shapes at base
+    paint.color = const Color(0xff1a0800).withValues(alpha: 0.8 * opacity);
+    canvas.drawOval(Rect.fromCenter(
+      center: Offset(cx - w * 0.02, fireBaseY + 3),
+      width: w * 0.08, height: vp * 0.012,
+    ), paint);
+    canvas.drawOval(Rect.fromCenter(
+      center: Offset(cx + w * 0.015, fireBaseY + 5),
+      width: w * 0.07, height: vp * 0.01,
+    ), paint);
+
+    // --- HUMAN FIGURES around fire ---
+    final List<double> figurePositions = [-0.12, -0.07, 0.07, 0.11];
+    for (int i = 0; i < figurePositions.length; i++) {
+      final double fx2 = cx + w * figurePositions[i];
+      final double fy = groundY - vp * 0.005;
+      final double figureH = vp * 0.06;
+      final double sway = sin(time * 0.8 + i * 1.5) * 2;
+
+      paint.color = const Color(0xff1a0a00).withValues(alpha: 0.7 * opacity);
+
+      // Body — oval
+      canvas.drawOval(Rect.fromCenter(
+        center: Offset(fx2 + sway * 0.5, fy - figureH * 0.4),
+        width: figureH * 0.3, height: figureH * 0.5,
+      ), paint);
+      // Head — circle
+      canvas.drawCircle(
+        Offset(fx2 + sway, fy - figureH * 0.8),
+        figureH * 0.12, paint,
+      );
+      // Legs
+      canvas.drawRect(Rect.fromLTWH(
+        fx2 - figureH * 0.08, fy - figureH * 0.15,
+        figureH * 0.06, figureH * 0.18,
+      ), paint);
+      canvas.drawRect(Rect.fromLTWH(
+        fx2 + figureH * 0.02, fy - figureH * 0.15,
+        figureH * 0.06, figureH * 0.18,
+      ), paint);
+    }
+
+    // --- DISTANT CAMPFIRES along horizon ---
+    final List<double> distantFires = [0.08, 0.18, 0.32, 0.68, 0.82, 0.92];
+    for (final double pos in distantFires) {
+      final double dfx = w * pos;
+      final double dfy = groundY - 3;
+
+      paint.color = AppColors.humanityFire.withValues(alpha: 0.2 * opacity);
+      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+      canvas.drawCircle(Offset(dfx, dfy), 5, paint);
+      paint.maskFilter = null;
+
+      paint.color = AppColors.humanityWarm.withValues(alpha: 0.6 * opacity);
+      canvas.drawCircle(Offset(dfx, dfy), 2, paint);
+    }
+
+    // --- CITY SKYLINE (appears later in progress) ---
+    final double buildProgress = ((progress - 0.4) / 0.4).clamp(0.0, 1.0);
+    if (buildProgress > 0) {
+      final Random r = Random(42);
+      paint.color = AppColors.humanityBg.withValues(alpha: 0.6);
+      final Paint winPaint = Paint()
+        ..color = AppColors.humanityWarm.withValues(alpha: 0.5 * buildProgress);
+
+      for (int i = 0; i < 30; i++) {
+        final double bx = (i / 30) * w + r.nextDouble() * 8;
+        final double bw = w / 30 * (0.5 + r.nextDouble() * 0.4);
+        final double bh = (30 + r.nextDouble() * 100) * buildProgress;
+
+        canvas.drawRect(
+          Rect.fromLTWH(bx, groundY - bh, bw, bh), paint);
+
+        if (bh > 25) {
+          final int floors = (bh / 10).floor();
+          for (int f = 0; f < floors; f++) {
+            final int winsPerFloor = (bw / 7).floor();
+            for (int wi = 0; wi < winsPerFloor; wi++) {
+              if (r.nextDouble() > 0.35) {
+                canvas.drawRect(
+                  Rect.fromLTWH(bx + 2 + wi * 7, groundY - bh + 3 + f * 10, 3, 4),
+                  winPaint,
+                );
+              }
             }
           }
         }
       }
     }
-
-    // Ground line
-    canvas.drawLine(
-      Offset(0, groundY),
-      Offset(size.width, groundY),
-      Paint()
-        ..color = AppColors.humanityDark.withValues(alpha: 0.5)
-        ..strokeWidth = 1,
-    );
   }
 
   @override
-  bool shouldRepaint(covariant _SkylinePainter old) =>
+  bool shouldRepaint(covariant _HumanityScenePainter old) =>
       old.progress != progress || old.time != time;
+}
+
+class _Flame {
+  const _Flame(this.offsetX, this.width, this.height, this.color);
+  final double offsetX;
+  final double width;
+  final double height;
+  final Color color;
 }
