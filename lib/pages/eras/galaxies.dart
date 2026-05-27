@@ -40,42 +40,47 @@ class GalaxiesEra extends StatelessWidget {
   Widget build(BuildContext context) {
     final int starCount = AppSettings.particleCount(context, desktop: 200);
 
-    return Selector<ScrollProvider, double>(
-      selector: (_, ScrollProvider pro) =>
-          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-      builder: (_, double progress, _) {
-
-        return EraWrapper(
-          eraIndex: eraIndex,
-          backgroundColor: AppColors.galaxiesBg,
-          nextBackgroundColor: AppColors.solarBg,
-          interactionHint: 'DRAG TO ROTATE',
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: StarFieldPainter(
-                    progress: progress,
-                    starCount: starCount,
-                    baseColor: AppColors.white,
-                    maxOpacity: 0.6,
-                    seed: 123,
+    return Consumer<AnimationProvider>(
+      builder: (_, AnimationProvider anim, _) {
+        return Selector<ScrollProvider, double>(
+          selector: (_, ScrollProvider pro) =>
+              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+          builder: (_, double progress, _) {
+            return EraWrapper(
+              eraIndex: eraIndex,
+              backgroundColor: AppColors.galaxiesBg,
+              nextBackgroundColor: AppColors.solarBg,
+              interactionHint: 'DRAG TO ROTATE',
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: StarFieldPainter(
+                        progress: progress,
+                        time: anim.time,
+                        starCount: starCount,
+                        baseColor: AppColors.white,
+                        maxOpacity: 0.6,
+                        seed: 123,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: NebulaPainter(
-                    progress: progress,
-                    clouds: _galacticClouds,
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: NebulaPainter(
+                        progress: progress,
+                        clouds: _galacticClouds,
+                        time: anim.time,
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned.fill(
+                    child: GalaxyRotator(eraProgress: progress),
+                  ),
+                ],
               ),
-              Positioned.fill(
-                child: GalaxyRotator(eraProgress: progress),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

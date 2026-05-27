@@ -97,6 +97,12 @@ class _EraTextContent extends StatelessWidget {
     final double horizontalPadding = isMobile ? 0.06 : 0.1;
     final double descriptionWidth = isMobile ? 0.85 : isTablet ? 0.65 : 0.5;
 
+    final Color timestampColor = useDarkText
+        ? AppColors.portfolioText.withValues(alpha: 0.4)
+        : AppColors.white.withValues(alpha: 0.4);
+    final Color headlineColor =
+        useDarkText ? AppColors.portfolioText : AppColors.white;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: size.width * horizontalPadding),
       child: Column(
@@ -105,11 +111,15 @@ class _EraTextContent extends StatelessWidget {
           Text(
             AppText.eraTimestamps[eraIndex],
             style: GoogleFonts.roboto(
-              color: useDarkText
-                  ? AppColors.portfolioText.withValues(alpha: 0.4)
-                  : AppColors.white.withValues(alpha: 0.4),
+              color: timestampColor,
               fontSize: size.height * 0.014 * scaleFactor,
               letterSpacing: 6,
+              shadows: [
+                Shadow(
+                  color: timestampColor.withValues(alpha: 0.5),
+                  blurRadius: 10,
+                ),
+              ],
             ),
           ),
           SizedBox(height: size.height * 0.02),
@@ -117,12 +127,36 @@ class _EraTextContent extends StatelessWidget {
             AppText.eraHeadlines[eraIndex],
             textAlign: TextAlign.center,
             style: GoogleFonts.russoOne(
-              color: useDarkText ? AppColors.portfolioText : AppColors.white,
-              fontSize: size.height * 0.05 * scaleFactor,
+              color: headlineColor,
+              fontSize: size.height * 0.055 * scaleFactor,
               letterSpacing: 3,
+              shadows: [
+                Shadow(
+                  color: headlineColor.withValues(alpha: 0.6),
+                  blurRadius: 20,
+                ),
+                Shadow(
+                  color: headlineColor.withValues(alpha: 0.3),
+                  blurRadius: 40,
+                ),
+              ],
             ),
           ),
-          SizedBox(height: size.height * 0.03),
+          SizedBox(height: size.height * 0.02),
+          Container(
+            width: size.width * 0.08,
+            height: size.height * 0.001,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.parent,
+                  headlineColor.withValues(alpha: 0.4),
+                  AppColors.parent,
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: size.height * 0.02),
           SizedBox(
             width: size.width * descriptionWidth,
             child: Text(
@@ -130,10 +164,16 @@ class _EraTextContent extends StatelessWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 color: useDarkText
-                    ? AppColors.portfolioText.withValues(alpha: 0.6)
-                    : AppColors.white.withValues(alpha: 0.6),
+                    ? AppColors.portfolioText.withValues(alpha: 0.7)
+                    : AppColors.white.withValues(alpha: 0.7),
                 fontSize: size.height * 0.018 * scaleFactor,
                 height: 1.7,
+                shadows: [
+                  Shadow(
+                    color: AppColors.white.withValues(alpha: 0.15),
+                    blurRadius: 8,
+                  ),
+                ],
               ),
             ),
           ),

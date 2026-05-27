@@ -7,6 +7,7 @@ export 'package:safeandromeda/core/utils/response.dart';
 
 // Providers
 export 'package:safeandromeda/core/provider/scroll_provider.dart';
+export 'package:safeandromeda/core/provider/animation_provider.dart';
 
 // Pages
 export 'package:safeandromeda/pages/journey/journey_page.dart';

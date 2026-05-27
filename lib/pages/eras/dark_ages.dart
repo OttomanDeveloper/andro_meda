@@ -31,21 +31,25 @@ class DarkAgesEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<ScrollProvider, double>(
-      selector: (_, ScrollProvider pro) =>
-          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-      builder: (_, double progress, _) {
-
-        return EraWrapper(
-          eraIndex: eraIndex,
-          backgroundColor: AppColors.darkAgesBg,
-          nextBackgroundColor: AppColors.firstStarsBg,
-          child: CustomPaint(
-            painter: NebulaPainter(
-              progress: progress,
-              clouds: _wisps,
-            ),
-          ),
+    return Consumer<AnimationProvider>(
+      builder: (_, AnimationProvider anim, _) {
+        return Selector<ScrollProvider, double>(
+          selector: (_, ScrollProvider pro) =>
+              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+          builder: (_, double progress, _) {
+            return EraWrapper(
+              eraIndex: eraIndex,
+              backgroundColor: AppColors.darkAgesBg,
+              nextBackgroundColor: AppColors.firstStarsBg,
+              child: CustomPaint(
+                painter: NebulaPainter(
+                  progress: progress,
+                  clouds: _wisps,
+                  time: anim.time,
+                ),
+              ),
+            );
+          },
         );
       },
     );

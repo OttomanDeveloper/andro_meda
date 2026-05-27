@@ -60,4 +60,8 @@ abstract class AppText {
   static const String portfolioRole = 'Flutter Developer';
   static const String portfolioTagline =
       'Building experiences that inspire.';
+
+  // Portfolio links
+  static const String portfolioGithub = 'github.com/user';
+  static const String portfolioEmail = 'contact@email.com';
 }

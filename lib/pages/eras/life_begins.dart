@@ -31,32 +31,40 @@ class LifeBeginsEra extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<ScrollProvider, double>(
-      selector: (_, ScrollProvider pro) =>
-          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-      builder: (_, double progress, _) {
-
-        return EraWrapper(
-          eraIndex: eraIndex,
-          backgroundColor: AppColors.lifeBg,
-          nextBackgroundColor: AppColors.giantsBg,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: NebulaPainter(progress: progress, clouds: _pools),
-                ),
-              ),
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: ParticlePainter(
-                    progress: progress,
-                    particles: _cellParticles,
+    return Consumer<AnimationProvider>(
+      builder: (_, AnimationProvider anim, _) {
+        return Selector<ScrollProvider, double>(
+          selector: (_, ScrollProvider pro) =>
+              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+          builder: (_, double progress, _) {
+            return EraWrapper(
+              eraIndex: eraIndex,
+              backgroundColor: AppColors.lifeBg,
+              nextBackgroundColor: AppColors.giantsBg,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: NebulaPainter(
+                        progress: progress,
+                        clouds: _pools,
+                        time: anim.time,
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: ParticlePainter(
+                        progress: progress,
+                        particles: _cellParticles,
+                        time: anim.time,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

@@ -33,39 +33,50 @@ class AgeOfGiantsEra extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isMobile = Responsive.isMobile(context);
 
-    return Selector<ScrollProvider, double>(
-      selector: (_, ScrollProvider pro) =>
-          (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-      builder: (_, double progress, _) {
-
-        return EraWrapper(
-          eraIndex: eraIndex,
-          backgroundColor: AppColors.giantsBg,
-          nextBackgroundColor: AppColors.humanityBg,
-          interactionHint: isMobile ? 'TAP TO REVEAL' : 'HOVER TO REVEAL',
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppColors.giantsBg, AppColors.giantsForest],
+    return Consumer<AnimationProvider>(
+      builder: (_, AnimationProvider anim, _) {
+        return Selector<ScrollProvider, double>(
+          selector: (_, ScrollProvider pro) =>
+              (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
+          builder: (_, double progress, _) {
+            return EraWrapper(
+              eraIndex: eraIndex,
+              backgroundColor: AppColors.giantsBg,
+              nextBackgroundColor: AppColors.humanityBg,
+              interactionHint:
+                  isMobile ? 'TAP TO REVEAL' : 'HOVER TO REVEAL',
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            AppColors.giantsBg,
+                            AppColors.giantsForest,
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: NebulaPainter(
+                        progress: progress,
+                        clouds: _mist,
+                        time: anim.time,
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: CreatureRevealer(eraProgress: progress),
+                  ),
+                ],
               ),
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: NebulaPainter(progress: progress, clouds: _mist),
-                ),
-              ),
-              Positioned.fill(
-                child: CreatureRevealer(eraProgress: progress),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

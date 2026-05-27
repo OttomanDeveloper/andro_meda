@@ -3,6 +3,7 @@ import 'package:safeandromeda/core/hooks/hooks.dart';
 class StarFieldPainter extends CustomPainter {
   const StarFieldPainter({
     required this.progress,
+    required this.time,
     this.starCount = 120,
     this.baseColor = AppColors.white,
     this.seed = 42,
@@ -10,10 +11,26 @@ class StarFieldPainter extends CustomPainter {
   });
 
   final double progress;
+  final double time;
   final int starCount;
   final Color baseColor;
   final int seed;
   final double maxOpacity;
+
+  /// Star color temperature: warm white, cool blue, or pale yellow based on index seed.
+  Color _starColor(int index) {
+    final int variant = (index * 7 + seed) % 5;
+    switch (variant) {
+      case 0:
+        return const Color(0xffaaccff); // cool blue
+      case 1:
+        return const Color(0xffffffcc); // pale yellow
+      case 2:
+        return const Color(0xffffddaa); // warm white
+      default:
+        return baseColor;
+    }
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -25,28 +42,59 @@ class StarFieldPainter extends CustomPainter {
       final double baseY = random.nextDouble() * size.height;
       final double starSize = random.nextDouble() * 2.0 + 0.5;
       final double depth = random.nextDouble();
+      final double twinkleSpeed = 1.0 + random.nextDouble() * 2.0;
 
       final double parallax = progress * size.height * 0.1 * depth;
       final double y = baseY - parallax;
 
       if (y < -10 || y > size.height + 10) continue;
 
+      // Ambient twinkle: sinusoidal opacity modulation driven by time
       final double twinkle =
-          (0.5 + 0.5 * ((i * 0.7 + progress * 3.0) % 1.0)).clamp(0.3, 1.0);
+          (0.5 + 0.5 * sin(time * twinkleSpeed + i * 0.7)).clamp(0.3, 1.0);
       final double opacity = (twinkle * maxOpacity).clamp(0.0, 1.0);
 
-      paint.color = baseColor.withValues(alpha: opacity);
+      final Color color = _starColor(i);
 
+      // 1. Outer glow (6x radius, very soft)
+      paint.color = color.withValues(alpha: opacity * 0.08);
+      paint.maskFilter = MaskFilter.blur(BlurStyle.normal, starSize * 4);
+      canvas.drawCircle(Offset(x, y), starSize * 6, paint);
+
+      // 2. Mid glow (3x radius)
+      paint.color = color.withValues(alpha: opacity * 0.2);
+      paint.maskFilter = MaskFilter.blur(BlurStyle.normal, starSize * 2);
+      canvas.drawCircle(Offset(x, y), starSize * 3, paint);
+
+      // 3. Core (full opacity, no blur)
+      paint.color = color.withValues(alpha: opacity);
+      paint.maskFilter = null;
       canvas.drawCircle(Offset(x, y), starSize, paint);
 
-      if (starSize > 1.5) {
-        paint.color = baseColor.withValues(alpha: opacity * 0.3);
-        canvas.drawCircle(Offset(x, y), starSize * 3, paint);
+      // 4. Cross spikes for large bright stars
+      if (starSize > 1.8) {
+        final double spikeLength = starSize * 5;
+        paint.color = color.withValues(alpha: opacity * 0.25);
+        paint.strokeWidth = 0.5;
+        paint.style = PaintingStyle.stroke;
+        // Horizontal spike
+        canvas.drawLine(
+          Offset(x - spikeLength, y),
+          Offset(x + spikeLength, y),
+          paint,
+        );
+        // Vertical spike
+        canvas.drawLine(
+          Offset(x, y - spikeLength),
+          Offset(x, y + spikeLength),
+          paint,
+        );
+        paint.style = PaintingStyle.fill;
       }
     }
   }
 
   @override
   bool shouldRepaint(covariant StarFieldPainter oldDelegate) =>
-      oldDelegate.progress != progress;
+      oldDelegate.progress != progress || oldDelegate.time != time;
 }

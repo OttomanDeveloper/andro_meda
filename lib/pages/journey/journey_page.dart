@@ -8,6 +8,7 @@ class JourneyPage extends StatelessWidget {
     final Size size = MediaQuery.sizeOf(context);
     final ScrollProvider provider = context.read<ScrollProvider>();
     provider.initScroll(size.height);
+    context.read<AnimationProvider>().start();
 
     return MaterialApp(
       title: AppSettings.appName,
