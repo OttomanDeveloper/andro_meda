@@ -173,27 +173,46 @@ class _SceneryPainter extends CustomPainter {
       canvas.drawPath(canopy, paint);
     }
 
-    // Flying pterodactyls
-    for (int p = 0; p < 3; p++) {
-      final double phase = time * (0.15 + p * 0.05) + p * 2.5;
-      final double px = (phase % 1.3) * size.width / 1.3;
-      final double py = size.height * (0.1 + p * 0.06) + sin(time * 0.8 + p) * 15;
-      final double wingSpan = 20 + p * 8.0;
-      final double wingFlap = sin(time * 3.0 + p * 1.5) * 8;
+    // Flying pterodactyls — V-shaped wings with body
+    for (int p = 0; p < 4; p++) {
+      final double speed = 0.08 + p * 0.03;
+      final double px = ((time * speed + p * 0.35) % 1.4 - 0.1) * size.width;
+      final double py = size.height * (0.08 + p * 0.05) + sin(time * 0.6 + p * 2) * 20;
+      final double wingSpan = 25 + p * 10.0;
+      final double wingFlap = sin(time * 2.5 + p * 1.7) * 12;
 
-      paint.color = const Color(0xff0a1508).withValues(alpha: 0.45 * sceneOpacity);
+      paint.color = const Color(0xff0a1508).withValues(alpha: 0.55 * sceneOpacity);
 
-      final Path ptero = Path();
-      ptero.moveTo(px, py);
-      ptero.lineTo(px - wingSpan, py - wingFlap);
-      ptero.lineTo(px - wingSpan * 0.3, py + 2);
-      ptero.lineTo(px + wingSpan * 0.3, py + 2);
-      ptero.lineTo(px + wingSpan, py - wingFlap);
-      ptero.close();
-      canvas.drawPath(ptero, paint);
+      // Body
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(px, py), width: wingSpan * 0.25, height: 4),
+        paint,
+      );
 
-      // Head
-      canvas.drawCircle(Offset(px + wingSpan * 0.15, py - 2), 2, paint);
+      // Left wing
+      final Path leftWing = Path();
+      leftWing.moveTo(px - 3, py);
+      leftWing.quadraticBezierTo(px - wingSpan * 0.5, py - wingFlap * 0.6, px - wingSpan, py - wingFlap);
+      leftWing.lineTo(px - wingSpan * 0.8, py - wingFlap + 3);
+      leftWing.quadraticBezierTo(px - wingSpan * 0.4, py + 2, px - 3, py + 1);
+      leftWing.close();
+      canvas.drawPath(leftWing, paint);
+
+      // Right wing
+      final Path rightWing = Path();
+      rightWing.moveTo(px + 3, py);
+      rightWing.quadraticBezierTo(px + wingSpan * 0.5, py - wingFlap * 0.6, px + wingSpan, py - wingFlap);
+      rightWing.lineTo(px + wingSpan * 0.8, py - wingFlap + 3);
+      rightWing.quadraticBezierTo(px + wingSpan * 0.4, py + 2, px + 3, py + 1);
+      rightWing.close();
+      canvas.drawPath(rightWing, paint);
+
+      // Head on a short neck
+      canvas.drawCircle(Offset(px + wingSpan * 0.18, py - 3), 2.5, paint);
+      canvas.drawRect(
+        Rect.fromLTWH(px + wingSpan * 0.18, py - 3, wingSpan * 0.1, 1.5),
+        paint,
+      );
     }
   }
 
