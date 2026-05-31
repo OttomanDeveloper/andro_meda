@@ -1,8 +1,12 @@
 name: safeandromeda
-description: A new Flutter project.
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+description: >-
+  Chronos — a scroll-driven journey through the history of the universe, told
+  in nine hand-painted Flutter scenes from the Big Bang to the future.
+repository: https://github.com/OttomanDeveloper/andro_meda
+homepage: https://ottomandeveloper.github.io/andro_meda/
+issue_tracker: https://github.com/OttomanDeveloper/andro_meda/issues
+# This is an application, not a pub package — keep it from being published.
+publish_to: "none"
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -30,7 +34,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^2.0.17
   google_fonts: ^8.1.0
   provider: ^6.1.2
   url_launcher: ^6.3.1
@@ -70,15 +73,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/images/
-    - assets/icons/
-    - assets/icons/svg/
-    - assets/avatar/
-    - assets/images/TokenInfo.png
-    - assets/social/
-  #   - images/a_dot_ham.jpeg
+  # No runtime assets are bundled — every scene is drawn with CustomPainters.
+  # The launcher-icon source (assets/icons/logo_source.png) is referenced by
+  # the flutter_launcher_icons config above and used only at generation time.
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

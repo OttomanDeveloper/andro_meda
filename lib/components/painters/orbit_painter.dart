@@ -1,5 +1,6 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
+/// Draws a glowing sun and a set of planets tracing elliptical orbits.
 class OrbitPainter extends CustomPainter {
   const OrbitPainter({
     required this.progress,
@@ -9,14 +10,25 @@ class OrbitPainter extends CustomPainter {
     this.time = 0.0,
   });
 
+  /// Era scroll progress in [0, 1]; reveals rings and advances planets.
   final double progress;
+
+  /// Orbit/planet definitions, innermost first.
   final List<OrbitRing> orbits;
+
+  /// Sun color, reused for its glow and lens flare.
   final Color centerColor;
+
+  /// Sun core radius in px; glow layers are multiples of it.
   final double centerRadius;
+
+  /// Global animation clock in seconds; keeps planets orbiting when idle.
   final double time;
 
+  /// Paints the sun, then each revealed orbit ring, planet, trail, and label.
   @override
   void paint(Canvas canvas, Size size) {
+    // Sun sits left of center so orbits extend across the canvas.
     final Offset center = Offset(size.width * 0.35, size.height * 0.45);
 
     // Sun: multi-layer glow
@@ -70,9 +82,13 @@ class OrbitPainter extends CustomPainter {
 
     for (int i = 0; i < orbits.length; i++) {
       final OrbitRing orbit = orbits[i];
+      // Outer orbits appear later; staggered across the first half of scroll.
       final double orbitAppear = (i / orbits.length) * 0.5;
-      final double localProgress =
-          ((drawProgress - orbitAppear) / 0.5).clamp(0.0, 1.0);
+      // This orbit's own 0..1 reveal once it starts appearing.
+      final double localProgress = ((drawProgress - orbitAppear) / 0.5).clamp(
+        0.0,
+        1.0,
+      );
 
       if (localProgress <= 0.0) continue;
 
@@ -81,8 +97,7 @@ class OrbitPainter extends CustomPainter {
       final Paint ringPaint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
-        ..color =
-            AppColors.white.withValues(alpha: 0.25 * localProgress);
+        ..color = AppColors.white.withValues(alpha: 0.25 * localProgress);
 
       canvas.drawArc(
         Rect.fromCenter(
@@ -99,6 +114,7 @@ class OrbitPainter extends CustomPainter {
       // Planet angle: uses both scroll progress and time for continuous orbit
       final double angle =
           progress * orbit.speed * pi * 2 + time * orbit.speed * 1.0;
+      // Planet position on the ellipse (radii are fractions of canvas size).
       final double px = center.dx + orbit.radiusX * size.width * cos(angle);
       final double py = center.dy + orbit.radiusY * size.height * sin(angle);
 
@@ -125,8 +141,10 @@ class OrbitPainter extends CustomPainter {
       // Planet glow halo
       final Paint planetGlowPaint = Paint()
         ..color = orbit.planetColor.withValues(alpha: 0.3 * localProgress)
-        ..maskFilter =
-            MaskFilter.blur(BlurStyle.normal, orbit.planetSize * 1.5);
+        ..maskFilter = MaskFilter.blur(
+          BlurStyle.normal,
+          orbit.planetSize * 1.5,
+        );
       canvas.drawCircle(
         Offset(px, py),
         orbit.planetSize * localProgress * 2.5,
@@ -158,19 +176,27 @@ class OrbitPainter extends CustomPainter {
       );
 
       // Lit-side gradient highlight
+      // Direction from sun to planet, so the highlight faces the sun.
       final double sunAngle = atan2(py - center.dy, px - center.dx);
       final Paint highlightPaint = Paint()
-        ..shader = RadialGradient(
-          center: Alignment(-cos(sunAngle) * 0.5, -sin(sunAngle) * 0.5),
-          radius: 1.0,
-          colors: [
-            orbit.planetColor.withValues(alpha: 0.6 * localProgress),
-            orbit.planetColor.withValues(alpha: 0.0),
-          ],
-        ).createShader(Rect.fromCircle(center: Offset(px, py), radius: orbit.planetSize));
-      canvas.drawCircle(Offset(px, py), orbit.planetSize * localProgress, highlightPaint);
+        ..shader =
+            RadialGradient(
+              center: Alignment(-cos(sunAngle) * 0.5, -sin(sunAngle) * 0.5),
+              radius: 1.0,
+              colors: [
+                orbit.planetColor.withValues(alpha: 0.6 * localProgress),
+                orbit.planetColor.withValues(alpha: 0.0),
+              ],
+            ).createShader(
+              Rect.fromCircle(center: Offset(px, py), radius: orbit.planetSize),
+            );
+      canvas.drawCircle(
+        Offset(px, py),
+        orbit.planetSize * localProgress,
+        highlightPaint,
+      );
 
-      // Planet name label
+      // Planet name label, shown once the orbit is past half-revealed.
       if (orbit.name.isNotEmpty && localProgress > 0.5) {
         final TextPainter tp = TextPainter(
           text: TextSpan(
@@ -187,11 +213,13 @@ class OrbitPainter extends CustomPainter {
     }
   }
 
+  /// Repaints when scroll or clock changes.
   @override
   bool shouldRepaint(covariant OrbitPainter oldDelegate) =>
       oldDelegate.progress != progress || oldDelegate.time != time;
 }
 
+/// One orbit plus the planet on it: ellipse radii, color, size, and speed.
 class OrbitRing {
   const OrbitRing({
     required this.radiusX,
@@ -202,10 +230,21 @@ class OrbitRing {
     this.name = '',
   });
 
+  /// Horizontal orbit radius as a fraction of canvas width.
   final double radiusX;
+
+  /// Vertical orbit radius as a fraction of canvas height.
   final double radiusY;
+
+  /// Planet fill color, also used for its glow and trail.
   final Color planetColor;
+
+  /// Planet radius in px at full reveal.
   final double planetSize;
+
+  /// Angular speed multiplier; higher orbits faster.
   final double speed;
+
+  /// Optional label drawn beside the planet.
   final String name;
 }

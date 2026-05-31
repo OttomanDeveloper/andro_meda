@@ -17,6 +17,7 @@ migrate_working_dir/
 *.ipr
 *.iws
 .idea/
+**/doc/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -48,3 +49,5 @@ app.*.map.json
 # Claude Code / Superpowers
 .claude/
 .superpowers/
+.gstack/
+docs/superpowers/

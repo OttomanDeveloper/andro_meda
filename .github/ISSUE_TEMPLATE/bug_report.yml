@@ -1,0 +1,51 @@
+name: 🐛 Bug report
+description: Report something that's broken or rendering incorrectly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for filing a bug! Please fill out the details below so it can be reproduced.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Scroll to the '...' era
+        2. ...
+        3. See the issue
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform(s)
+      multiple: true
+      options:
+        - Web (desktop browser)
+        - Web (mobile browser)
+        - Android
+        - iOS
+        - Desktop (Windows / macOS / Linux)
+    validations:
+      required: true
+  - type: input
+    id: flutter-version
+    attributes:
+      label: Flutter version
+      description: Output of `flutter --version`
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / recording
+      description: For visual bugs, a screenshot or short clip helps a lot.
+    validations:
+      required: false

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Live demo
+    url: https://ottomandeveloper.github.io/andro_meda/
+    about: See the project running in your browser before filing an issue.

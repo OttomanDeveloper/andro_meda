@@ -1,8 +1,10 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
+/// Era 2: the first stars igniting and lighting up the universe.
 class FirstStarsEra extends StatelessWidget {
   const FirstStarsEra({super.key});
 
+  /// Slot in the timeline; ties this era to its scroll range and colors.
   static const int eraIndex = 2;
 
   // Hero stars: [x, y, size, appearAtProgress]
@@ -14,186 +16,170 @@ class FirstStarsEra extends StatelessWidget {
     [0.7, 0.55, 8.0, 0.3],
   ];
 
-  static const List<List<List<double>>> _constellations = [
-    // Triangle
-    [[0.2, 0.25], [0.28, 0.15], [0.35, 0.28]],
-    // Chain
-    [[0.55, 0.2], [0.62, 0.25], [0.68, 0.18], [0.75, 0.22]],
-    // Arc
-    [[0.4, 0.6], [0.48, 0.55], [0.56, 0.58]],
-  ];
-
+  /// Stacks the star field plus blooming hero stars; rebuilt every frame.
   @override
   Widget build(BuildContext context) {
-    final int starCount = AppSettings.particleCount(context, desktop: 200);
+    final int starCount = AppSettings.particleCount(
+      context,
+      desktop: 200,
+    ); // background field density
 
-    return Consumer<CursorProvider>(
-      builder: (_, CursorProvider cursor, _) {
-        return Consumer<AnimationProvider>(
-          builder: (_, AnimationProvider anim, _) {
-            return Selector<ScrollProvider, double>(
-              selector: (_, ScrollProvider pro) =>
-                  (pro.eraProgressFor(eraIndex) * 100).roundToDouble() / 100,
-              builder: (_, double progress, _) {
-                return EraWrapper(
-                  eraIndex: eraIndex,
-                  backgroundColor: AppColors.firstStarsBg,
-                  nextBackgroundColor: AppColors.galaxiesBg,
-                  interactionHint: 'TAP TO IGNITE STARS',
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                AppColors.firstStarsBg,
-                                AppColors.firstStarsDeep,
-                              ],
+    return EraScope(
+      eraIndex: eraIndex,
+      builder:
+          (
+            BuildContext context,
+            double time,
+            double progress,
+            double cursorX,
+            double cursorY,
+          ) {
+            return EraWrapper(
+              eraIndex: eraIndex,
+              backgroundColor: AppColors.firstStarsBg,
+              nextBackgroundColor: AppColors.galaxiesBg,
+              interactionHint: 'TAP TO IGNITE STARS',
+              child: Stack(
+                children: [
+                  // Layer 0: vertical gradient backdrop.
+                  Positioned.fill(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            AppColors.firstStarsBg,
+                            AppColors.firstStarsDeep,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Layer 1: twinkling star field; fades in with progress.
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: StarFieldPainter(
+                        progress: progress,
+                        time: time,
+                        starCount: starCount,
+                        baseColor: AppColors.firstStarsGlow,
+                        maxOpacity: progress.clamp(0.0, 1.0),
+                        seed: 77,
+                        cursorX: cursorX,
+                        cursorY: cursorY,
+                      ),
+                    ),
+                  ),
+                  // Layer 2: faint constellation lines joining stars.
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: ConstellationPainter(
+                        progress: progress,
+                        time: time,
+                      ),
+                    ),
+                  ),
+                  // Layer 3: hero stars, large stars that bloom in one at a time.
+                  for (int i = 0; i < _heroStars.length; i++)
+                    Builder(
+                      builder: (_) {
+                        final List<double> star = _heroStars[i];
+                        // Fade in over 0.15 of progress once past this star's appearAt.
+                        final double starOpacity = ((progress - star[3]) / 0.15)
+                            .clamp(0.0, 1.0);
+                        if (starOpacity <= 0) return const SizedBox.shrink();
+                        final Size screenSize = MediaQuery.sizeOf(context);
+                        return Positioned(
+                          // Center the glow on its fractional canvas position.
+                          left: star[0] * screenSize.width - star[2] * 3,
+                          top:
+                              star[1] *
+                                  screenSize.height *
+                                  AppSettings
+                                      .eraHeightFactor - // canvas is 2x viewport tall
+                              star[2] * 3,
+                          child: Opacity(
+                            opacity: starOpacity,
+                            child: Container(
+                              width: star[2] * 6,
+                              height: star[2] * 6,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color(
+                                  0xffc8dcff,
+                                ).withValues(alpha: starOpacity * 0.9),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xffc8dcff,
+                                    ).withValues(alpha: starOpacity * 0.6),
+                                    blurRadius: 40 * starOpacity,
+                                    spreadRadius: 10 * starOpacity,
+                                  ),
+                                  BoxShadow(
+                                    color: AppColors.white.withValues(
+                                      alpha: starOpacity * 0.3,
+                                    ),
+                                    blurRadius: 60 * starOpacity,
+                                    spreadRadius: 20 * starOpacity,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                        );
+                      },
+                    ),
+                  // Layer 4: tap interaction that ignites new stars.
+                  Positioned.fill(child: StarIgniter(eraProgress: progress)),
+                  // Layer 5: supernova flashes seeding heavy elements.
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: SupernovaePainter(
+                        progress: progress,
+                        time: time,
                       ),
-                      Positioned.fill(
-                        child: CustomPaint(
-                          painter: StarFieldPainter(
-                            progress: progress,
-                            time: anim.time,
-                            starCount: starCount,
-                            baseColor: AppColors.firstStarsGlow,
-                            maxOpacity: progress.clamp(0.0, 1.0),
-                            seed: 77,
-                            cursorX: cursor.normalizedX,
-                            cursorY: cursor.normalizedY,
-                          ),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: CustomPaint(
-                          painter: _ConstellationPainter(
-                            progress: progress,
-                            time: anim.time,
-                          ),
-                        ),
-                      ),
-                      // Hero stars — large blooming stars
-                      for (int i = 0; i < _heroStars.length; i++)
-                        Builder(
-                          builder: (_) {
-                            final List<double> star = _heroStars[i];
-                            final double starOpacity =
-                                ((progress - star[3]) / 0.15).clamp(0.0, 1.0);
-                            if (starOpacity <= 0) return const SizedBox.shrink();
-                            final Size screenSize = MediaQuery.sizeOf(context);
-                            return Positioned(
-                              left: star[0] * screenSize.width - star[2] * 3,
-                              top: star[1] * screenSize.height *
-                                      AppSettings.eraHeightFactor -
-                                  star[2] * 3,
-                              child: Opacity(
-                                opacity: starOpacity,
-                                child: Container(
-                                  width: star[2] * 6,
-                                  height: star[2] * 6,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: const Color(0xffc8dcff)
-                                        .withValues(alpha: starOpacity * 0.9),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0xffc8dcff)
-                                            .withValues(
-                                                alpha: starOpacity * 0.6),
-                                        blurRadius: 40 * starOpacity,
-                                        spreadRadius: 10 * starOpacity,
-                                      ),
-                                      BoxShadow(
-                                        color: AppColors.white.withValues(
-                                            alpha: starOpacity * 0.3),
-                                        blurRadius: 60 * starOpacity,
-                                        spreadRadius: 20 * starOpacity,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      Positioned.fill(
-                        child: StarIgniter(eraProgress: progress),
-                      ),
-                      Positioned.fill(
-                        child: CustomPaint(
-                          painter: ForegroundPainter(
-                            time: anim.time,
-                            color: AppColors.firstStarsGlow,
-                            seed: eraIndex * 100 + 99,
-                            cursorX: cursor.normalizedX,
-                            cursorY: cursor.normalizedY,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                );
-              },
+                  // Layer 6: floating epoch labels.
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: InfoLabelPainter(
+                        progress: progress,
+                        time: time,
+                        labels: _firstStarsFacts,
+                        glowColor: AppColors.firstStarsGlow,
+                      ),
+                    ),
+                  ),
+                  // Top layer: parallax foreground specks that react to the cursor.
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: ForegroundPainter(
+                        time: time,
+                        color: AppColors.firstStarsGlow,
+                        seed: eraIndex * 100 + 99,
+                        cursorX: cursorX,
+                        cursorY: cursorY,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
-        );
-      },
     );
   }
 }
 
-class _ConstellationPainter extends CustomPainter {
-  const _ConstellationPainter({required this.progress, required this.time});
-  final double progress;
-  final double time;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (progress < 0.3) return;
-    final double lineOpacity = ((progress - 0.3) / 0.25).clamp(0.0, 0.65);
-    final Paint linePaint = Paint()
-      ..color = const Color(0xffc8dcff).withValues(alpha: lineOpacity)
-      ..strokeWidth = 1.2
-      ..style = PaintingStyle.stroke
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
-
-    for (final List<List<double>> constellation in FirstStarsEra._constellations) {
-      final Path path = Path();
-      for (int i = 0; i < constellation.length; i++) {
-        final double drawProgress = ((progress - 0.3 - i * 0.03) / 0.2).clamp(0.0, 1.0);
-        if (drawProgress <= 0) break;
-
-        final double cx = constellation[i][0] * size.width;
-        final double cy = constellation[i][1] * size.height;
-
-        if (i == 0) {
-          path.moveTo(cx, cy);
-        } else {
-          final double prevX = constellation[i - 1][0] * size.width;
-          final double prevY = constellation[i - 1][1] * size.height;
-          final double x = prevX + (cx - prevX) * drawProgress;
-          final double y = prevY + (cy - prevY) * drawProgress;
-          path.lineTo(x, y);
-        }
-
-        // Bright dot at each star point
-        canvas.drawCircle(
-          Offset(cx, cy),
-          2.5,
-          Paint()..color = const Color(0xffc8dcff).withValues(alpha: lineOpacity * 3),
-        );
-      }
-      canvas.drawPath(path, linePaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _ConstellationPainter old) =>
-      old.progress != progress || old.time != time;
-}
+// Periphery positions keep labels legible against the star field. y is a
+// fraction of the full (2x viewport) era canvas.
+const List<InfoLabel> _firstStarsFacts = [
+  InfoLabel('FIRST LIGHT', 0.10, 0.13, 0.04),
+  InfoLabel('POPULATION III STARS', 0.60, 0.17, 0.12),
+  InfoLabel('100-1000x SOLAR MASS', 0.11, 0.30, 0.20),
+  InfoLabel('FUSION FORGES HELIUM', 0.62, 0.34, 0.28),
+  InfoLabel('SUPERNOVAE SEED METALS', 0.10, 0.50, 0.38),
+  InfoLabel('REIONIZATION BEGINS', 0.62, 0.56, 0.48),
+];
