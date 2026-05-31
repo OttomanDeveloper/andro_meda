@@ -1,5 +1,6 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
+/// Draws a twinkling, parallaxing star field with depth-sorted glow layers.
 class StarFieldPainter extends CustomPainter {
   const StarFieldPainter({
     required this.progress,
@@ -12,13 +13,28 @@ class StarFieldPainter extends CustomPainter {
     this.cursorY = 0.0,
   });
 
+  /// Era scroll progress in [0, 1]; drives vertical parallax.
   final double progress;
+
+  /// Global animation clock in seconds; drives twinkle.
   final double time;
+
+  /// Number of stars to draw.
   final int starCount;
+
+  /// Fallback star color for non-tinted variants.
   final Color baseColor;
+
+  /// RNG seed; fixes star placement so the field stays stable across frames.
   final int seed;
+
+  /// Upper bound on star opacity in [0, 1]; dims the whole field.
   final double maxOpacity;
+
+  /// Normalized cursor X (-1..1) for horizontal parallax.
   final double cursorX;
+
+  /// Normalized cursor Y (-1..1) for vertical parallax.
   final double cursorY;
 
   /// Star color temperature: warm white, cool blue, or pale yellow based on index seed.
@@ -36,6 +52,7 @@ class StarFieldPainter extends CustomPainter {
     }
   }
 
+  /// Draws every on-screen star with parallax, twinkle, and glow.
   @override
   void paint(Canvas canvas, Size size) {
     final Random random = Random(seed);
@@ -44,10 +61,12 @@ class StarFieldPainter extends CustomPainter {
     for (int i = 0; i < starCount; i++) {
       final double x = random.nextDouble() * size.width;
       final double baseY = random.nextDouble() * size.height;
-      final double starSize = random.nextDouble() * 2.0 + 0.5;
-      final double depth = random.nextDouble();
+      final double starSize = random.nextDouble() * 2.0 + 0.5; // 0.5..2.5 px
+      final double depth = random
+          .nextDouble(); // 0=far, 1=near; scales parallax
       final double twinkleSpeed = 2.0 + random.nextDouble() * 3.0;
 
+      // Nearer stars move more with scroll and cursor.
       final double parallax = progress * size.height * 0.1 * depth;
       final double parallaxX = cursorX * 15.0 * depth;
       final double parallaxY = cursorY * 10.0 * depth;
@@ -57,8 +76,8 @@ class StarFieldPainter extends CustomPainter {
       if (finalY < -10 || finalY > size.height + 10) continue;
 
       // Ambient twinkle: sinusoidal opacity modulation driven by time
-      final double twinkle =
-          (0.5 + 0.5 * sin(time * twinkleSpeed + i * 0.7)).clamp(0.3, 1.0);
+      final double twinkle = (0.5 + 0.5 * sin(time * twinkleSpeed + i * 0.7))
+          .clamp(0.3, 1.0);
       final double opacity = (twinkle * maxOpacity).clamp(0.0, 1.0);
 
       final Color color = _starColor(i);
@@ -105,26 +124,44 @@ class StarFieldPainter extends CustomPainter {
     }
   }
 
-  void _drawPointedStar(Canvas canvas, Offset center, double size, Paint paint) {
+  /// Draws a 4-pointed star polygon centered at [center], used for big stars.
+  void _drawPointedStar(
+    Canvas canvas,
+    Offset center,
+    double size,
+    Paint paint,
+  ) {
     final Path path = Path();
-    final double inner = size * 0.3;
-    final double outer = size;
+    final double inner = size * 0.3; // valley radius between points
+    final double outer = size; // tip radius
 
     for (int i = 0; i < 4; i++) {
+      // Tip angle, starting at the top (-pi/2).
       final double angle = (i / 4) * pi * 2 - pi / 2;
+      // Valley angle, halfway to the next tip.
       final double nextAngle = ((i + 0.5) / 4) * pi * 2 - pi / 2;
 
       if (i == 0) {
-        path.moveTo(center.dx + cos(angle) * outer, center.dy + sin(angle) * outer);
+        path.moveTo(
+          center.dx + cos(angle) * outer,
+          center.dy + sin(angle) * outer,
+        );
       } else {
-        path.lineTo(center.dx + cos(angle) * outer, center.dy + sin(angle) * outer);
+        path.lineTo(
+          center.dx + cos(angle) * outer,
+          center.dy + sin(angle) * outer,
+        );
       }
-      path.lineTo(center.dx + cos(nextAngle) * inner, center.dy + sin(nextAngle) * inner);
+      path.lineTo(
+        center.dx + cos(nextAngle) * inner,
+        center.dy + sin(nextAngle) * inner,
+      );
     }
     path.close();
     canvas.drawPath(path, paint);
   }
 
+  /// Repaints when scroll, clock, or cursor changes; placement is seed-fixed.
   @override
   bool shouldRepaint(covariant StarFieldPainter oldDelegate) =>
       oldDelegate.progress != progress ||

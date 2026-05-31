@@ -2,6 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
+/// Root scaffold: one ticker, a scrolling column of the 9 eras, the progress
+/// bar, and the cursor trail overlay.
 class JourneyPage extends StatefulWidget {
   const JourneyPage({super.key});
 
@@ -11,8 +13,9 @@ class JourneyPage extends StatefulWidget {
 
 class _JourneyPageState extends State<JourneyPage>
     with SingleTickerProviderStateMixin {
-  late final Ticker _ticker;
+  late final Ticker _ticker; // drives the global animation clock
 
+  /// Starts the ticker that feeds AnimationProvider its time value.
   @override
   void initState() {
     super.initState();
@@ -20,23 +23,28 @@ class _JourneyPageState extends State<JourneyPage>
     _ticker.start();
   }
 
+  /// Pushes elapsed seconds (ms/1000) into the animation clock every frame.
   void _onTick(Duration elapsed) {
     context.read<AnimationProvider>().updateTime(
       elapsed.inMilliseconds / 1000.0,
     );
   }
 
+  /// Stops the ticker to release the frame callback.
   @override
   void dispose() {
     _ticker.dispose();
     super.dispose();
   }
 
+  /// Builds the scroll view of eras plus the fixed progress bar and trail.
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
     final ScrollProvider scrollPro = context.read<ScrollProvider>();
-    scrollPro.initScroll(size.height);
+    scrollPro.initScroll(
+      size.height,
+    ); // hand viewport height so it can map scroll → per-era progress
 
     return MaterialApp(
       title: AppSettings.appName,
@@ -45,19 +53,22 @@ class _JourneyPageState extends State<JourneyPage>
       home: Scaffold(
         backgroundColor: AppColors.bigBangVoid,
         body: MouseRegion(
+          // Feed hover position to the cursor trail painter.
           onHover: (PointerHoverEvent event) {
-            context
-                .read<CursorProvider>()
-                .updatePosition(event.position, size);
+            context.read<CursorProvider>().updatePosition(event.position, size);
           },
           child: Stack(
             children: [
               SingleChildScrollView(
-                controller: scrollPro.scrollController,
+                controller:
+                    scrollPro.scrollController, // shared with ScrollProvider
                 physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
                 child: Column(
+                  // 9 eras in chronological order, then the portfolio reveal.
+                  // Each era is one scroll-page tall and isolated in a
+                  // RepaintBoundary so its painter doesn't repaint neighbours.
                   children: [
                     RepaintBoundary(
                       child: SizedBox(
@@ -115,19 +126,16 @@ class _JourneyPageState extends State<JourneyPage>
                     ),
                     RepaintBoundary(
                       child: SizedBox(
-                        height: size.height,
+                        height: size
+                            .height, // final card is exactly one viewport, no era factor
                         child: const PortfolioReveal(),
                       ),
                     ),
                   ],
                 ),
               ),
-              const Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: ProgressBar(),
-              ),
+              const Positioned(top: 0, left: 0, right: 0, child: ProgressBar()),
+              // Cursor trail overlay: full-bleed, non-interactive, repaints with the clock.
               Positioned.fill(
                 child: IgnorePointer(
                   child: Consumer<CursorProvider>(
@@ -135,7 +143,7 @@ class _JourneyPageState extends State<JourneyPage>
                       return Consumer<AnimationProvider>(
                         builder: (_, AnimationProvider anim, _) {
                           return CustomPaint(
-                            painter: _CursorTrailPainter(
+                            painter: CursorTrailPainter(
                               position: cursor.position,
                               time: anim.time,
                             ),
@@ -152,43 +160,4 @@ class _JourneyPageState extends State<JourneyPage>
       ),
     );
   }
-}
-
-class _CursorTrailPainter extends CustomPainter {
-  _CursorTrailPainter({required this.position, required this.time});
-
-  final Offset position;
-  final double time;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint();
-    for (int i = 0; i < 6; i++) {
-      final double offsetX = sin(time * 3 + i) * (3 + i * 2);
-      final double offsetY = cos(time * 2.5 + i * 0.7) * (2 + i * 1.5);
-      final double alpha = (0.4 - i * 0.06).clamp(0.0, 0.4);
-      final double radius = 2.0 - i * 0.2;
-
-      paint.color = const Color(0xffffffff).withValues(alpha: alpha);
-      paint.maskFilter = null;
-      canvas.drawCircle(
-        Offset(position.dx + offsetX, position.dy + offsetY),
-        radius,
-        paint,
-      );
-
-      paint.color =
-          const Color(0xffffffff).withValues(alpha: alpha * 0.3);
-      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
-      canvas.drawCircle(
-        Offset(position.dx + offsetX, position.dy + offsetY),
-        radius * 3,
-        paint,
-      );
-      paint.maskFilter = null;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _CursorTrailPainter old) => true;
 }

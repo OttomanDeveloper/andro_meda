@@ -1,7 +1,9 @@
+/// All static copy: era titles/timestamps/descriptions and the portfolio text.
+/// The era lists are parallel and indexed by era number (0..8).
 abstract class AppText {
   const AppText._();
 
-  // Era names (used by progress bar)
+  // Era names (used by progress bar), index = era number 0..8
   static const List<String> eraNames = [
     'The Big Bang',
     'Cosmic Dark Ages',
@@ -54,14 +56,35 @@ abstract class AppText {
   ];
 
   // Portfolio section
-  static const String portfolioIntro =
-      'This experience was crafted by';
+  static const String portfolioIntro = 'This experience was crafted by';
   static const String portfolioName = 'Muhammad Usman';
-  static const String portfolioRole = 'Flutter Developer';
+  static const String portfolioRole = 'Senior Flutter Developer';
+  static const String portfolioSubrole =
+      'Mobile App Specialist · BLE & Healthcare';
   static const String portfolioTagline =
-      'Building experiences that inspire.';
+      '4+ years building cross-platform apps people actually use.';
 
-  // Portfolio links
-  static const String portfolioGithub = 'github.com/user';
-  static const String portfolioEmail = 'contact@email.com';
+  // Headline metrics, each entry is a [value, label] pair shown as a stat card.
+  static const List<List<String>> portfolioStats = [
+    ['50+', 'Apps shipped'],
+    ['600K+', 'Users reached'],
+    ['1K+', 'YouTube subscribers'],
+    ['Google', 'Adopted my Dart package'],
+  ];
+
+  // Core stack.
+  static const List<String> portfolioTech = [
+    'Flutter',
+    'Dart',
+    'Firebase',
+    'BLE',
+    'Gemini AI',
+    'BLoC',
+  ];
+
+  // Portfolio links.
+  static const String portfolioGithub = 'github.com/OttomanDeveloper';
+  static const String portfolioLinkedIn = 'linkedin.com/in/ottomancoder';
+  static const String portfolioYouTube = 'youtube.com/@OttomanCoder';
+  static const String portfolioEmail = 'usman243786@gmail.com';
 }

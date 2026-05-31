@@ -1,5 +1,7 @@
 import 'package:safeandromeda/core/hooks/hooks.dart';
 
+/// Shared era scaffold: 2x-tall gradient background plus headline/description
+/// text with scroll-driven entrance and parallax. The scene [child] fills it.
 class EraWrapper extends StatelessWidget {
   const EraWrapper({
     super.key,
@@ -11,13 +13,25 @@ class EraWrapper extends StatelessWidget {
     this.interactionHint,
   });
 
+  /// Position in the 9-era sequence; indexes into the AppText copy tables.
   final int eraIndex;
+
+  /// The painted scene for this era, stretched to fill the canvas.
   final Widget child;
+
+  /// Gradient top color, shown at the start of the era.
   final Color backgroundColor;
+
+  /// Gradient bottom color; lerps in toward this as [progress] rises.
   final Color nextBackgroundColor;
+
+  /// Use dark text instead of white (for bright-background eras).
   final bool useDarkText;
+
+  /// Optional one-line prompt below the copy (e.g. "drag to rotate").
   final String? interactionHint;
 
+  /// Builds the background, scene, and text overlay; rebuilds each scroll frame.
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
@@ -73,6 +87,8 @@ class EraWrapper extends StatelessWidget {
     );
   }
 
+  /// Vertical text slide in px: rises into place over the first 15% of the era,
+  /// then nudges up slightly over the last 25%. Zero in between.
   double _entranceOffset(double progress, double viewportHeight) {
     if (progress < 0.15) {
       final double t = progress / 0.15;
@@ -85,6 +101,7 @@ class EraWrapper extends StatelessWidget {
     return 0;
   }
 
+  /// Text scale: grows from 0.85 to 1.0 over the first 15%, then holds at 1.0.
   double _entranceScale(double progress) {
     if (progress < 0.15) {
       final double t = progress / 0.15;
@@ -93,17 +110,22 @@ class EraWrapper extends StatelessWidget {
     return 1.0;
   }
 
+  /// Text opacity: fades in over the first 15%, out over the last 25%.
   double _textOpacity(double progress) {
     if (progress < 0.15) return (progress / 0.15).clamp(0.0, 1.0);
     if (progress > 0.75) return ((1.0 - progress) / 0.25).clamp(0.0, 1.0);
     return 1.0;
   }
 
+  /// Parallax shift in px: text moves up to +/-7.5% of viewport height as the
+  /// era scrolls past, drifting opposite the scroll direction.
   double _parallaxOffset(double progress, double viewportHeight) {
     return (progress - 0.5) * viewportHeight * -0.15;
   }
 }
 
+/// The centered text block for an era: timestamp, animated headline, divider,
+/// description, and optional interaction hint.
 class _EraTextContent extends StatelessWidget {
   const _EraTextContent({
     required this.eraIndex,
@@ -117,20 +139,32 @@ class _EraTextContent extends StatelessWidget {
   final double progress;
   final String? interactionHint;
 
+  /// Lays out the text column with responsive sizing and theme-aware colors.
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
     final bool isMobile = Responsive.isMobile(context);
     final bool isTablet = Responsive.isTablet(context);
-    final double scaleFactor = isMobile ? 0.65 : isTablet ? 0.8 : 1.0;
+    // Multiplies all font sizes down on smaller form factors.
+    final double scaleFactor = isMobile
+        ? 0.65
+        : isTablet
+        ? 0.8
+        : 1.0;
     final double horizontalPadding = isMobile ? 0.06 : 0.1;
-    final double descriptionWidth = isMobile ? 0.85 : isTablet ? 0.65 : 0.5;
+    // Description box width as a fraction of screen width.
+    final double descriptionWidth = isMobile
+        ? 0.85
+        : isTablet
+        ? 0.65
+        : 0.5;
 
     final Color timestampColor = useDarkText
         ? AppColors.portfolioText.withValues(alpha: 0.4)
         : AppColors.white.withValues(alpha: 0.4);
-    final Color headlineColor =
-        useDarkText ? AppColors.portfolioText : AppColors.white;
+    final Color headlineColor = useDarkText
+        ? AppColors.portfolioText
+        : AppColors.white;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: size.width * horizontalPadding),
@@ -223,6 +257,7 @@ class _EraTextContent extends StatelessWidget {
   }
 }
 
+/// Headline that reveals one character at a time as the era scrolls in.
 class _AnimatedHeadline extends StatelessWidget {
   const _AnimatedHeadline({
     required this.text,
@@ -234,27 +269,38 @@ class _AnimatedHeadline extends StatelessWidget {
   final TextStyle style;
   final double progress;
 
+  /// Builds the per-character fade-and-rise reveal, scaled to fit the width.
   @override
   Widget build(BuildContext context) {
+    // Drives the whole reveal across era progress 0.05..0.20.
     final double charProgress = ((progress - 0.05) / 0.15).clamp(0.0, 1.0);
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(text.length, (int i) {
-        final double delay = i / text.length;
-        final double charOpacity =
-            ((charProgress - delay * 0.5) / 0.5).clamp(0.0, 1.0);
-        final double charOffset = (1.0 - charOpacity) * 15;
+    // Scale the (non-wrapping) animated headline down to fit narrow screens
+    // so long titles don't overflow the width on phones.
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(text.length, (int i) {
+          // Later characters start later, staggering the reveal left to right.
+          final double delay = i / text.length;
+          final double charOpacity = ((charProgress - delay * 0.5) / 0.5).clamp(
+            0.0,
+            1.0,
+          );
+          // Each char drops in from 15px below as it fades up.
+          final double charOffset = (1.0 - charOpacity) * 15;
 
-        return Transform.translate(
-          offset: Offset(0, charOffset),
-          child: Opacity(
-            opacity: charOpacity,
-            child: Text(text[i], style: style),
-          ),
-        );
-      }),
+          return Transform.translate(
+            offset: Offset(0, charOffset),
+            child: Opacity(
+              opacity: charOpacity,
+              child: Text(text[i], style: style),
+            ),
+          );
+        }),
+      ),
     );
   }
 }

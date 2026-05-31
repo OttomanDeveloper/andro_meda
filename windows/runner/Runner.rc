@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "safeandromeda" "\0"
+            VALUE "CompanyName", "Muhammad Usman" "\0"
+            VALUE "FileDescription", "Chronos - A Journey Through the Universe" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "com.safe.safeandromeda" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Muhammad Usman. All rights reserved." "\0"
             VALUE "OriginalFilename", "safeandromeda.exe" "\0"
-            VALUE "ProductName", "safeandromeda" "\0"
+            VALUE "ProductName", "Chronos" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
