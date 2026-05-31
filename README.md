@@ -15,8 +15,29 @@ It's a showcase of what Flutter can do for rich, interactive, fully responsive
 storytelling on the web (and mobile, and desktop).
 
 > 👉 **[Experience it live](https://ottomandeveloper.github.io/andro_meda/)**
+>
+> 💻 Best viewed on a **desktop browser** — the cursor-driven parallax and
+> hover-to-reveal moments need a mouse, and the wide scenes have room to breathe.
+> It stays fully responsive on tablet and phone, just without the pointer effects.
 
 ---
+
+## 🎬 A Flutter animation showcase
+
+Everything in the timeline is drawn and moved in pure Dart. No GIFs, videos,
+Lottie files, or pre-rendered sprites, just `Canvas` calls running every frame.
+
+- **More than 30 `CustomPainter`s** render every star, galaxy, planet, creature,
+  and particle by hand.
+- **One `Ticker`** drives all of it. It feeds a single `time` value through a
+  `Provider`, and only the on-screen era listens, so dozens of scenes hold 60fps
+  without dozens of `AnimationController`s.
+- **Scroll is the timeline.** Page position maps to progress through each era,
+  so you scrub 13.8 billion years by scrolling.
+- **Procedural, not keyframed.** Flames flicker, galaxies wind, comets follow
+  real conic-section orbits, and dinosaurs walk, all from math.
+
+It is built to show how far Flutter's rendering and animation can go on the web.
 
 ## ✨ Features
 
@@ -80,22 +101,30 @@ Key ideas worth reading the code for:
 
 ## 📁 Project Structure
 
+Every `CustomPainter` lives in its own file under a `painters/` folder; widget
+files never contain a painter.
+
 ```
 lib/
-├── main.dart                  # App entry — providers + JourneyPage
+├── main.dart                   # App entry — providers + JourneyPage
 ├── core/
-│   ├── hooks/hooks.dart       # Barrel export used across the app
-│   ├── provider/              # ScrollProvider, AnimationProvider, CursorProvider
-│   └── utils/                 # AppSettings, AppColors, AppText, Responsive
+│   ├── hooks/hooks.dart        # Barrel export used across the app
+│   ├── provider/               # ScrollProvider, AnimationProvider, CursorProvider
+│   └── utils/                  # AppSettings, AppColors, AppText, Responsive
 ├── pages/
-│   ├── journey/               # The scrolling journey scaffold + cursor trail
-│   ├── eras/                  # One file per era (the nine scenes)
-│   └── portfolio/             # Final developer reveal screen
-├── layouts/                   # Per-breakpoint layouts (mobile/tablet/desktop)
+│   ├── journey/
+│   │   ├── journey_page.dart   # The scrolling journey scaffold
+│   │   └── painters/           # CursorTrailPainter
+│   ├── eras/                   # One widget per era (the nine scenes)
+│   │   └── painters/           # One painter per file, per era scene (22 of them)
+│   └── portfolio/              # Final developer reveal screen
+├── layouts/                    # Per-breakpoint layouts (mobile/tablet/desktop)
 └── components/
-    ├── journey/               # ProgressBar, EraWrapper, EraScope
-    ├── interactive/           # StarIgniter, GalaxyRotator, CreatureRevealer
-    └── painters/              # Reusable CustomPainters
+    ├── journey/                # ProgressBar, EraWrapper, EraScope
+    ├── interactive/
+    │   ├── *.dart              # StarIgniter, GalaxyRotator, CreatureRevealer
+    │   └── painters/           # Their painters (galaxy spiral, titan dust, …)
+    └── painters/               # Shared, reusable painters (StarField, Nebula, …)
 ```
 
 ## 🚀 Getting Started

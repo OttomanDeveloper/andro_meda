@@ -48,7 +48,8 @@ These keep the codebase consistent — please follow them:
 ## Adding or improving an era
 
 - Each era lives in `lib/pages/eras/<era>.dart` and is wrapped in `EraScope` +
-  `EraWrapper`.
+  `EraWrapper`. Its `CustomPainter`s go one-per-file under
+  `lib/pages/eras/painters/`; the era widget file never holds a painter.
 - The era canvas is `2 × viewport` tall. A scene anchored at canvas fraction `f`
   is best framed around era-progress `p ≈ f − 0.35`; keep this in mind so
   content isn't off-screen when its era is active.
